@@ -1,5 +1,8 @@
 #Ford-Fulkerson Algorithm
 
+def xrange(x):
+    return iter(range(x))
+
 #find path by using BFS
 def dfs(C, F, s, t):
         stack = [s]
@@ -11,7 +14,7 @@ def dfs(C, F, s, t):
                 for v in xrange(len(C)):
                         if(C[u][v]-F[u][v]>0) and v not in paths:
                                 paths[v] = paths[u]+[(u,v)]
-                                print paths
+                                print(paths)
                                 if v == t:
                                         return paths[v]
                                 stack.append(v)
@@ -41,6 +44,6 @@ C = [[ 0, 3, 3, 0, 0, 0 ],  # s
 source = 0  # A
 sink = 5    # F
 max_flow_value = max_flow(C, source, sink)
-print "Ford-Fulkerson algorithm"
-print "max_flow_value is: ", max_flow_value
+print("Ford-Fulkerson algorithm")
+print("max_flow_value is:" + str(max_flow_value))
 

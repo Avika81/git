@@ -22,7 +22,17 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="MaxFlowAlgorithms\Dinic%27s Algorithm.py" />
+    <Compile Include="MaxFlowAlgorithms\Edmonds-Karp Algorithm.py" />
+    <Compile Include="MaxFlowAlgorithms\FordFulkersonAlgorithm.py" />
+    <Compile Include="MaxFlowAlgorithms\Push-Relabel Algorithm.py" />
     <Compile Include="Oleg_scedule.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MaxFlowAlgorithms\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MaxFlowAlgorithms\README.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
