@@ -15,7 +15,7 @@ class Employee:
     name = ""
     availability = [[]]
     jobs = []
-    max_day = 4
+    max_day = [4,4,4,4,4,4,4]
     max_week = 6
     def __init__(self, id, name, availability, jobs):
         self.id = id
@@ -130,7 +130,7 @@ for e in range(number_of_employees):
             if(shifts[s].time.day == d):
                 new_line[e * number_of_shifts + s] = total_time(shifts[s].time)
         A.append(new_line)
-        b.append(employees[e].max_day)
+        b.append(employees[e].max_day[d])
 
 c = np.zeros(number_variables).tolist()
 for i in range(number_variables):
