@@ -60,8 +60,7 @@ Time("Thu",14,18),
 Time("Sat",6,23)],
 [1])]
 '''
-shifts = [
-Shift(0,Time("Sun",8,10),1),
+shifts = [Shift(0,Time("Sun",8,10),1),
 Shift(1,Time("Sun",8,10),1), #same is easy here **
 Shift(2,Time("Sun",11,13),1),
 Shift(3,Time("Sun",8,10),2),
@@ -72,11 +71,7 @@ Shift(7,Time("Tue",8,10),1),
 Shift(8,Time("Tue",11,13),1),
 Shift(9,Time("Wed",8,10),2),
 Shift(10,Time("Thu",8,10),3),
-Shift(11,Time("Thu",11,13),4)
-]
-
-
-
+Shift(11,Time("Thu",11,13),4)]
 
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
@@ -111,29 +106,32 @@ def total_time(t):
     res = t.end - t.start
     return res
 
+def get_index(employee,shift,number_of_shifts):
+    return(employee*number_of_shifts+shift)
+
 #Ax<=b,max <c,x>
 A = []
 b = []  
 c = []
-eq_right = []
 eq_left = []
+eq_right = []
 
 number_variables = number_of_shifts * number_of_employees 
 # variables are : 0 - shifts-1 those for employee1, and so on.  to get xij, do
-# i*number_of_shifts)+j
+# i * number_of_shifts)+j
 
 #shifts constraints:
 shift_num = -1
 for s in range(number_of_shifts):
     shift_num += 1
-    new_line = np.zeros(number_variables).tolist()
+    new_line = np.zeros(number_variables)
     for e in range(number_of_employees):
         if(could_do_this_job(shifts[s], employees[e])):  # the employee can do it?
-            new_line[e * number_of_shifts + s] = 1 # he is only one employee
+            new_line[get_index(e,s,number_of_shifts)] = 1 # he is only one employee
 
         else:  # should kill this variable: (so adding the constaint of xij==0
-            nl = np.zeros(number_variables).tolist()
-            nl[e * number_of_shifts + s] = 1
+            nl = np.zeros(number_variables)
+            nl[get_index(e,s,number_of_shifts)] = 1
             eq_left.append(nl)
             eq_right.append(0)
     A.append(new_line)
@@ -141,22 +139,21 @@ for s in range(number_of_shifts):
 
 #week constraints:
 for e in range(number_of_employees):
-    new_line = np.zeros(number_variables).tolist()
+    new_line = np.zeros(number_variables)
     for s in range(number_of_shifts):
-        new_line[e * number_of_shifts + s] = total_time(shifts[s].time)  # the length of this shift
+        new_line[get_index(e,s,number_of_shifts)] = total_time(shifts[s].time)  # the length of this shift
     A.append(new_line)
     b.append(employees[e].max_week)
 
-#day constaints
+#day constraints:
 for e in range(number_of_employees):
     for d in range(len(days)):
-        new_line = np.zeros(number_variables).tolist()
+        new_line = np.zeros(number_variables)
         for s in range(number_of_shifts):
             if(shifts[s].time.day == days[d]):
-                new_line[e * number_of_shifts + s] = total_time(shifts[s].time)
+                new_line[get_index(e,s,number_of_shifts)] = total_time(shifts[s].time)
         A.append(new_line)
         b.append(employees[e].max_day[d])
-
 
 #check that each employee is only in one place at a time
 for s1 in range(number_of_shifts):
@@ -167,10 +164,10 @@ for s1 in range(number_of_shifts):
         if(collision(shifts[s1].time, shifts[s2].time)):
             l_collisions.append(s2)
     for e in range(number_of_employees):
-        new_line = np.zeros(number_variables).tolist()
-        new_line[e * number_of_shifts + s1] = 1
+        new_line = np.zeros(number_variables)
+        new_line[get_index(e,s1,number_of_shifts)] = 1
         for s2 in l_collisions:
-            new_line[e * number_of_shifts + s2] = 1
+            new_line[get_index(e,s2,number_of_shifts)] = 1
         A.append(new_line)
         b.append(1)
 
@@ -179,12 +176,11 @@ if(debug):
         output = str(A[row]) + "<=" + str(b[row])
         print(output)
 
-c = np.zeros(number_variables).tolist()
-cnt = 1
+c = np.zeros(number_variables)
 for e in range(number_of_employees):
     for s in range(number_of_shifts):
-        bonus = random.randint(0,number_of_employees)
-        c[e * number_of_shifts + s] = - 1 - bonus
+        bonus = np.random.uniform(0,2)
+        c[get_index(e,s,number_of_shifts)] = - 1 - bonus
 
 resolution,sol = linprog.linsolve(c,A,b,eq_left,eq_right,range(number_variables))
 
@@ -197,10 +193,10 @@ else:
         l = []
         print('shift' + str(shifts[s].id))
         for e in range(number_of_employees):
-            if sol[e * number_of_shifts + s] > 0:
+            if sol[get_index(e,s,number_of_shifts)] > 0:
                 l.append(employees[e])
             output = ""
             for e in l:
                 output += str(e.id) + "," 
-        print("employees: " + output) 
+        print("employees: " + output)
         
