@@ -1,6 +1,9 @@
 from pylinprogmaster import linprog
 import numpy as np
-debug = False
+import random
+
+debug = True
+
 class Time:
     day = ""
     start = 0
@@ -16,7 +19,7 @@ class Employee:
     availability = [[]]
     jobs = []
     max_day = [4,4,4,4,4,4,4]
-    max_week = 6
+    max_week = 20
     def __init__(self, id, name, availability, jobs):
         self.id = id
         self.name = name
@@ -57,20 +60,24 @@ Time("Thu",14,18),
 Time("Sat",6,23)],
 [1])]
 '''
-shifts = [Shift(0,Time("Sun",8,10),1),
+shifts = [
+Shift(0,Time("Sun",8,10),1),
 Shift(1,Time("Sun",8,10),1), #same is easy here **
 Shift(2,Time("Sun",11,13),1),
-Shift(3,Time("Sun",8,10),2)]
-'''
+Shift(3,Time("Sun",8,10),2),
 Shift(4,Time("Sun",8,10),3),
 Shift(5,Time("Sun",11,13),4),
 Shift(6,Time("Mon",8,10),1),
 Shift(7,Time("Tue",8,10),1),
 Shift(8,Time("Tue",11,13),1),
-Shift(9,Time("Wen",8,10),2),
-Shift(10,Time("Fri",8,10),3),
-Shift(11,Time("Fri",11,13),4)]
-'''
+Shift(9,Time("Wed",8,10),2),
+Shift(10,Time("Thu",8,10),3),
+Shift(11,Time("Thu",11,13),4)
+]
+
+
+
+
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
@@ -173,8 +180,11 @@ if(debug):
         print(output)
 
 c = np.zeros(number_variables).tolist()
-for i in range(number_variables):
-    c[i] = -1
+cnt = 1
+for e in range(number_of_employees):
+    for s in range(number_of_shifts):
+        bonus = random.randint(0,number_of_employees)
+        c[e * number_of_shifts + s] = - 1 - bonus
 
 resolution,sol = linprog.linsolve(c,A,b,eq_left,eq_right,range(number_variables))
 
