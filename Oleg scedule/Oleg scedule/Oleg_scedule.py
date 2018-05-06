@@ -1,6 +1,6 @@
 from pylinprogmaster import linprog
 import numpy as np
-
+debug = False
 class Time:
     day = ""
     start = 0
@@ -36,8 +36,7 @@ class Shift:
 
 days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
 
-employees = [
-Employee(1,"Employee1",
+employees = [Employee(1,"Employee1",
 [Time("Sun",0,24),
 Time("Mon",0,24),
 Time("Tue",0,24),
@@ -50,8 +49,7 @@ Time("Mon",0,24),
 Time("Tue",0,24),
 Time("Wed",0,24),
 Time("Thu",0,24)],
-[1,2,3,4]),
-]
+[1,2,3,4]),]
 '''
 Employee(3,"Employee3",
 [Time("Wed",8,12),
@@ -59,12 +57,10 @@ Time("Thu",14,18),
 Time("Sat",6,23)],
 [1])]
 '''
-shifts = [
-Shift(0,Time("Sun",8,10),1),
+shifts = [Shift(0,Time("Sun",8,10),1),
 Shift(1,Time("Sun",8,10),1), #same is easy here **
 Shift(2,Time("Sun",11,13),1),
-Shift(3,Time("Sun",8,10),2)
-]
+Shift(3,Time("Sun",8,10),2)]
 '''
 Shift(4,Time("Sun",8,10),3),
 Shift(5,Time("Sun",11,13),4),
@@ -79,7 +75,7 @@ number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
 def collision(x,y):
-    if(x.day!=y.day):
+    if(x.day != y.day):
         return(False)
     if(x.end <= y.start):
         return(False)
@@ -88,7 +84,7 @@ def collision(x,y):
     return(True)
 
 def in_time(x,y):  # check if x is in y
-    if(x.day!=y.day):
+    if(x.day != y.day):
         return(False)
     if(x.start < y.start):
         return(False)
@@ -165,15 +161,16 @@ for s1 in range(number_of_shifts):
             l_collisions.append(s2)
     for e in range(number_of_employees):
         new_line = np.zeros(number_variables).tolist()
-        new_line[e*number_of_shifts + s1] = 1
+        new_line[e * number_of_shifts + s1] = 1
         for s2 in l_collisions:
-            new_line[e*number_of_shifts + s2] = 1
+            new_line[e * number_of_shifts + s2] = 1
         A.append(new_line)
         b.append(1)
 
-for row in range(len(A)):
-    output = str(A[row]) + "<=" + str(b[row])
-    print(output)
+if(debug):
+    for row in range(len(A)):
+        output = str(A[row]) + "<=" + str(b[row])
+        print(output)
 
 c = np.zeros(number_variables).tolist()
 for i in range(number_variables):
@@ -181,16 +178,16 @@ for i in range(number_variables):
 
 resolution,sol = linprog.linsolve(c,A,b,eq_left,eq_right,range(number_variables))
 
-print(sol)
+if(debug): print(sol)
 
-if resolution!= "solved":
+if resolution != "solved":
     print(resolution)
 else:
     for s in range(number_of_shifts):
         l = []
         print('shift' + str(shifts[s].id))
         for e in range(number_of_employees):
-            if sol[e*number_of_shifts + s] > 0:
+            if sol[e * number_of_shifts + s] > 0:
                 l.append(employees[e])
             output = ""
             for e in l:
