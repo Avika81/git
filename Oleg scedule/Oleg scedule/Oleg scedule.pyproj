@@ -27,12 +27,20 @@
     <Compile Include="MaxFlowAlgorithms\FordFulkersonAlgorithm.py" />
     <Compile Include="MaxFlowAlgorithms\Push-Relabel Algorithm.py" />
     <Compile Include="Oleg_scedule.py" />
+    <Compile Include="pylinprogmaster\linprog.py" />
+    <Compile Include="pylinprogmaster\setup.py" />
+    <Compile Include="pylinprogmaster\test_linprog.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MaxFlowAlgorithms\" />
+    <Folder Include="pylinprogmaster\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="json_sample_input.txt" />
     <Content Include="MaxFlowAlgorithms\README.md" />
+    <Content Include="pylinprogmaster\.gitignore" />
+    <Content Include="pylinprogmaster\LICENCE.MIT" />
+    <Content Include="pylinprogmaster\README.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

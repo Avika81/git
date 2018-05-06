@@ -34,6 +34,8 @@ def max_flow(C, s, t):
     
 # make a capacity graph
 # node s  o  p  q  r  t
+
+'''
 C = [[ 0, 3, 3, 0, 0, 0 ],  # s
      [ 0, 0, 2, 3, 0, 0 ],  # o
      [ 0, 0, 0, 0, 2, 0 ],  # p
@@ -46,4 +48,5 @@ sink = 5    # F
 max_flow_value = max_flow(C, source, sink)
 print("Ford-Fulkerson algorithm")
 print("max_flow_value is:" + str(max_flow_value))
+'''
 
