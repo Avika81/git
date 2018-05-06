@@ -53,7 +53,7 @@ Time("Sat",6,23)],
 [1])]
 
 shifts = [Shift(Time("Sun",8,10),1),
-Shift(Time("Sun",8,10),1),   #same is easy here **
+Shift(Time("Sun",8,10),1), #same is easy here **
 Shift(Time("Sun",11,13),1),
 Shift(Time("Sun",8,10),2),
 Shift(Time("Sun",8,10),3),
@@ -64,7 +64,6 @@ Shift(Time("Tue",11,13),1),
 Shift(Time("Wen",8,10),2),
 Shift(Time("Fri",8,10),3),
 Shift(Time("Fri",11,13),4)]
-
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
@@ -112,8 +111,8 @@ for s in range(number_of_shifts):
         else:  # should kill this variable: (so adding the constaint of xij==0
             nl = np.zeros(number_variables).tolist()
             nl[e * number_of_shifts + s] = 1
-            eq_right.append(nl)
-            eq_left.append(0)
+            eq_left.append(nl)
+            eq_right.append(0)
         
 #week constraints:
 for e in range(number_of_employees):
@@ -136,9 +135,6 @@ for e in range(number_of_employees):
 c = np.zeros(number_variables).tolist()
 for i in range(number_variables):
     c[i] = -1
-
-for i in range(len(A)):
-    print(A[i])
 
 resolution,sol = linprog.linsolve(c,A,b,eq_left,eq_right,range(number_variables))
 
