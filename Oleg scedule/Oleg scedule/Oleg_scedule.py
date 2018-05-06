@@ -24,15 +24,18 @@ class Employee:
         self.jobs = jobs
 
 class Shift:
+    id = 0
     time = Time("",0,0)
     job_id = 0
     number_employees_needed = 1
-    def __init__(self, time, job_id):
+    def __init__(self,id, time, job_id):
+        self.id = id
         self.time = time
         self.job_id = job_id
         self.number_employees_needed = 1
 
 days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+
 employees = [Employee(1,"Employee1",
 [Time("Sun",8,12),
 Time("Sun",14,18),
@@ -52,22 +55,25 @@ Time("Thu",14,18),
 Time("Sat",6,23)],
 [1])]
 
-shifts = [Shift(Time("Sun",8,10),1),
-Shift(Time("Sun",8,10),1), #same is easy here **
-Shift(Time("Sun",11,13),1),
-Shift(Time("Sun",8,10),2),
-Shift(Time("Sun",8,10),3),
-Shift(Time("Sun",11,13),4),
-Shift(Time("Mon",8,10),1),
-Shift(Time("Tue",8,10),1),
-Shift(Time("Tue",11,13),1),
-Shift(Time("Wen",8,10),2),
-Shift(Time("Fri",8,10),3),
-Shift(Time("Fri",11,13),4)]
+shifts = [Shift(0,Time("Sun",8,10),1),
+Shift(1,Time("Sun",8,10),1), #same is easy here **
+Shift(2,Time("Sun",11,13),1),
+Shift(3,Time("Sun",8,10),2),
+Shift(4,Time("Sun",8,10),3),
+Shift(5,Time("Sun",11,13),4),
+Shift(6,Time("Mon",8,10),1),
+Shift(7,Time("Tue",8,10),1),
+Shift(8,Time("Tue",11,13),1),
+Shift(9,Time("Wen",8,10),2),
+Shift(10,Time("Fri",8,10),3),
+Shift(11,Time("Fri",11,13),4)]
+
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
 def in_time(x,y):  # check if x is in y
+    if(x.day!=y.day):
+        return(False)
     if(x.start < y.start):
         return(False)
     if(x.end > y.end):
@@ -113,7 +119,7 @@ for s in range(number_of_shifts):
             nl[e * number_of_shifts + s] = 1
             eq_left.append(nl)
             eq_right.append(0)
-        
+
 #week constraints:
 for e in range(number_of_employees):
     new_line = np.zeros(number_variables).tolist()
@@ -124,13 +130,27 @@ for e in range(number_of_employees):
 
 #day constaints
 for e in range(number_of_employees):
-    for d in days:
+    for d in range(len(days)):
         new_line = np.zeros(number_variables).tolist()
         for s in range(number_of_shifts):
-            if(shifts[s].time.day == d):
+            if(shifts[s].time.day == days[d]):
                 new_line[e * number_of_shifts + s] = total_time(shifts[s].time)
         A.append(new_line)
         b.append(employees[e].max_day[d])
+
+#check that each employee is only in one place at a time
+for e in range(number_of_employees):
+    for d in range(len(days)):
+        for h in range(0,24):
+            new_line = np.zeros(number_variables).tolist()
+            for s in range(number_of_shifts):
+                t = Time(days[d],s,s+1)
+                if(in_time(t,shifts[s].time)):
+                    new_line[e * number_of_shifts + s] = 1
+            A.append(new_line)
+            b.append(1)
+             
+
 
 c = np.zeros(number_variables).tolist()
 for i in range(number_variables):
@@ -138,5 +158,17 @@ for i in range(number_variables):
 
 resolution,sol = linprog.linsolve(c,A,b,eq_left,eq_right,range(number_variables))
 
-print(resolution)
-print(sol)
+if resolution!= "solved":
+    print(resolution)
+else:
+    for s in range(number_of_shifts):
+        l = []
+        print('shift' + str(shifts[s].id))
+        for e in range(number_of_employees):
+            if sol[e*number_of_shifts + s] > 1/2:
+                l.append(employees[e])
+            output = ""
+            for e in l:
+                output += str(e.id) + "," 
+        print("employees: " + output) 
+        
