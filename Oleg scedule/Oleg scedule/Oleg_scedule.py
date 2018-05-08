@@ -3,7 +3,8 @@ import numpy as np
 import random
 
 debug = False
-
+epsilon = 0.01
+max_shift_time = 12.0
 class Time:
     day = ""
     start = 0
@@ -59,8 +60,7 @@ Time("Thu",14,18),
 Time("Sat",6,23)],
 [1])]
 '''
-shifts = [Shift(0,Time("Sun",8,13),1)]
-'''
+shifts = [Shift(0,Time("Sun",8,10),1),
 Shift(1,Time("Sun",8,10),1), #same is easy here **
 Shift(2,Time("Sun",11,13),1),
 Shift(3,Time("Sun",8,10),2),
@@ -72,7 +72,7 @@ Shift(8,Time("Tue",11,13),1),
 Shift(9,Time("Wed",8,10),2),
 Shift(10,Time("Thu",8,10),3),
 Shift(11,Time("Thu",11,13),4)]
-'''
+
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
@@ -186,7 +186,7 @@ if(debug):
 c = np.zeros(number_variables)
 for e in range(number_of_employees):
     for s in range(number_of_shifts):
-        bonus = np.random.uniform(0,2)
+        bonus = np.random.uniform(0,epsilon)
         c[get_index(e,s,number_of_shifts)] = - 1 - bonus
 
 resolution,sol = linprog.linsolve(c,A,b,eq_left,eq_right,range(number_variables))
@@ -200,7 +200,7 @@ else:
         l = []
         print('shift' + str(shifts[s].id))
         for e in range(number_of_employees):
-            if sol[get_index(e,s,number_of_shifts)] == 1:
+            if sol[get_index(e,s,number_of_shifts)] > 1 - 1/max_shift_time:
                 l.append(employees[e])
             output = ""
             for e in l:
