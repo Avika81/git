@@ -2,7 +2,7 @@ from pylinprogmaster import linprog
 import numpy as np
 import random
 
-debug = True
+debug = False
 
 class Time:
     day = ""
@@ -45,22 +45,22 @@ Time("Mon",0,24),
 Time("Tue",0,24),
 Time("Wed",0,24),
 Time("Thu",0,24)],
-[1,2,3,4]),
-Employee(2,"Employee2",
+[1,2,3,4])]
+'''Employee(2,"Employee2",
 [Time("Sun",0,24),
 Time("Mon",0,24),
 Time("Tue",0,24),
 Time("Wed",0,24),
 Time("Thu",0,24)],
 [1,2,3,4]),]
-'''
 Employee(3,"Employee3",
 [Time("Wed",8,12),
 Time("Thu",14,18),
 Time("Sat",6,23)],
 [1])]
 '''
-shifts = [Shift(0,Time("Sun",8,10),1),
+shifts = [Shift(0,Time("Sun",8,13),1)]
+'''
 Shift(1,Time("Sun",8,10),1), #same is easy here **
 Shift(2,Time("Sun",11,13),1),
 Shift(3,Time("Sun",8,10),2),
@@ -72,7 +72,7 @@ Shift(8,Time("Tue",11,13),1),
 Shift(9,Time("Wed",8,10),2),
 Shift(10,Time("Thu",8,10),3),
 Shift(11,Time("Thu",11,13),4)]
-
+'''
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
@@ -119,6 +119,13 @@ eq_right = []
 number_variables = number_of_shifts * number_of_employees 
 # variables are : 0 - shifts-1 those for employee1, and so on.  to get xij, do
 # i * number_of_shifts)+j
+
+#each employee is able to work in a single shift only one time
+for i in range(number_variables):
+    new_line = np.zeros(number_variables)
+    new_line[i] = 1
+    A.append(new_line)
+    b.append(1)
 
 #shifts constraints:
 shift_num = -1
@@ -193,10 +200,9 @@ else:
         l = []
         print('shift' + str(shifts[s].id))
         for e in range(number_of_employees):
-            if sol[get_index(e,s,number_of_shifts)] > 0:
+            if sol[get_index(e,s,number_of_shifts)] == 1:
                 l.append(employees[e])
             output = ""
             for e in l:
                 output += str(e.id) + "," 
         print("employees: " + output)
-        
