@@ -26,15 +26,6 @@
     <Compile Include="MaxFlowAlgorithms\Edmonds-Karp Algorithm.py" />
     <Compile Include="MaxFlowAlgorithms\FordFulkersonAlgorithm.py" />
     <Compile Include="MaxFlowAlgorithms\Push-Relabel Algorithm.py" />
-    <Compile Include="newCase1.py" />
-    <Compile Include="newCase2.py" />
-    <Compile Include="newCase3.py" />
-    <Compile Include="newCase4.py" />
-    <Compile Include="newCase5.py" />
-    <Compile Include="newCase6.py" />
-    <Compile Include="newCase7.py" />
-    <Compile Include="newCase8.py" />
-    <Compile Include="newCase9.py" />
     <Compile Include="Oleg_scedule.py" />
     <Compile Include="pylinprogmaster\linprog.py" />
     <Compile Include="pylinprogmaster\setup.py" />

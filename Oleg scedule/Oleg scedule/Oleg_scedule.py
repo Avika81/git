@@ -19,19 +19,22 @@ class Employee:
     name = ""
     availability = [[]]
     jobs = []
-    max_day = [4,4,4,4,4,4,4]
-    max_week = 20
-    def __init__(self, id, name, availability, jobs):
+    max_day = []
+    max_week = 0
+    def __init__(self, id, name, availability, jobs, max_day = [4,4,4,4,4,4,4], max_week = 20):
         self.id = id
         self.name = name
         self.availability = availability
         self.jobs = jobs
+        self.max_day = max_day
+        self.max_week = max_week
 
 class Shift:
     id = 0
     time = Time("",0,0)
     job_id = 0
     number_employees_needed = 1
+    priority = 1
     def __init__(self,id, time, job_id):
         self.id = id
         self.time = time
@@ -40,38 +43,84 @@ class Shift:
 
 days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
 
-employees = [Employee(1,"Employee1",
-[Time("Sun",0,24),
-Time("Mon",0,24),
-Time("Tue",0,24),
-Time("Wed",0,24),
-Time("Thu",0,24)],
-[1,2,3,4])]
-'''Employee(2,"Employee2",
-[Time("Sun",0,24),
-Time("Mon",0,24),
-Time("Tue",0,24),
-Time("Wed",0,24),
-Time("Thu",0,24)],
-[1,2,3,4]),]
-Employee(3,"Employee3",
-[Time("Wed",8,12),
-Time("Thu",14,18),
-Time("Sat",6,23)],
-[1])]
-'''
-shifts = [Shift(0,Time("Sun",8,10),1),
-Shift(1,Time("Sun",8,10),1), #same is easy here **
-Shift(2,Time("Sun",11,13),1),
-Shift(3,Time("Sun",8,10),2),
-Shift(4,Time("Sun",8,10),3),
-Shift(5,Time("Sun",11,13),4),
-Shift(6,Time("Mon",8,10),1),
-Shift(7,Time("Tue",8,10),1),
-Shift(8,Time("Tue",11,13),1),
-Shift(9,Time("Wed",8,10),2),
-Shift(10,Time("Thu",8,10),3),
-Shift(11,Time("Thu",11,13),4)]
+employees = [Employee(1,"Bill",
+[Time("Sun",14,24),
+Time("Mon",15,24),
+Time("Tue",16.5,24),
+Time("Wed",3,24),
+Time("Thu",16.5,24),
+Time("Fri",13,24),
+Time("Sat",10,24)],
+[1,2,3,4]),
+
+Employee(2,"Jenny",
+[Time("Sun",8.5,24),
+Time("Mon",12,24),
+Time("Tue",12,24),
+Time("Wed",12,18),
+Time("Wed",21,24),
+Time("Thu",12,24),
+Time("Fri",12,24),
+Time("Sat",8.5,24)],
+[1,2,3,4]),
+            
+Employee(3,"Tom",
+[Time("Sun",12,24),
+Time("Mon",15,24),
+Time("Tue",15,24),
+Time("Wed",15,24),
+Time("Thu",15,24),
+Time("Fri",13,18)],
+[1,2,3,4]),
+
+Employee(4,"Amy",
+[Time("Sun",14,24),
+Time("Mon",15,24),
+Time("Tue",16.5,24),
+Time("Wed",15,18),
+Time("Thu",16.5,24),
+Time("Fri",13,24),
+Time("Sat",10,24)],
+[1,2,3,4])
+
+]
+
+""" test 1: BB"""
+shifts = [
+Shift(0,Time("Sun",12,13),1),
+Shift(1,Time("Sun",13,14),1),
+Shift(2,Time("Sun",14,15),1),
+Shift(3,Time("Sun",15,16),1),
+Shift(4,Time("Sun",16,17),1),
+Shift(5,Time("Sun",17,18),1),
+Shift(6,Time("Sun",18,19),1), #same is easy here **
+Shift(7,Time("Sun",19,20),1),
+Shift(8,Time("Sun",20,21),1),
+
+Shift(9,Time("Mon",18,19),1),
+Shift(10,Time("Mon",19,20),1),
+Shift(11,Time("Mon",20,21),1),
+Shift(12,Time("Mon",21,22),1),
+Shift(13,Time("Mon",22,23),1),
+
+Shift(14,Time("Tue",18,19),1),
+Shift(15,Time("Tue",19,20),1),
+Shift(16,Time("Tue",20,21),1),
+Shift(17,Time("Tue",21,22),1),
+Shift(18,Time("Tue",22,23),1),
+
+Shift(19,Time("Wed",18,19),1),
+Shift(20,Time("Wed",19,20),1),
+Shift(21,Time("Wed",20,21),1),
+Shift(22,Time("Wed",21,22),1),
+Shift(23,Time("Wed",22,23),1),
+
+Shift(24,Time("Thu",18,19),1),
+Shift(25,Time("Thu",19,20),1),
+Shift(26,Time("Thu",20,21),1),
+Shift(27,Time("Thu",21,22),1),
+Shift(28,Time("Thu",22,23),1)
+]
 
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
@@ -187,7 +236,7 @@ c = np.zeros(number_variables)
 for e in range(number_of_employees):
     for s in range(number_of_shifts):
         bonus = np.random.uniform(0,epsilon)
-        c[get_index(e,s,number_of_shifts)] = - 1 - bonus
+        c[get_index(e,s,number_of_shifts)] = - shifts[s].priority * total_time(shifts[s].time) - bonus
 
 resolution,sol = linprog.linsolve(c,A,b,eq_left,eq_right,range(number_variables))
 
@@ -204,5 +253,5 @@ else:
                 l.append(employees[e])
             output = ""
             for e in l:
-                output += str(e.id) + "," 
+                output += str(e.name) + "," 
         print("employees: " + output)
