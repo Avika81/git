@@ -7,7 +7,7 @@ debug = False
 debug2 = False
 epsilon = 0.01
 max_shift_time = 12.0
-ideal_shift_times = [(2,2),(3,4)]
+ideal_shift_times = [(2,3),(3,8)]
 
 def day_to_num(day):
     if day == "Sun": return 1
@@ -108,7 +108,7 @@ Time("Fri",13,24),
 Time("Sat",10,24)],
 [1,2,3,4])
 ]
-""" test 1: BB """
+""" test 1: BB 
 shifts = [ 
 Shift(0,Time("Sun",12,13),1),
 Shift(1,Time("Sun",13,14),1),
@@ -116,7 +116,7 @@ Shift(2,Time("Sun",14,15),1),
 Shift(3,Time("Sun",15,16),1),
 Shift(4,Time("Sun",16,17),1),
 Shift(5,Time("Sun",17,18),1),
-Shift(6,Time("Sun",18,19),1), #same is easy here **
+Shift(6,Time("Sun",18,19),1),
 Shift(7,Time("Sun",19,20),1),
 Shift(8,Time("Sun",20,21),1),
 
@@ -143,8 +143,7 @@ Shift(25,Time("Thu",19,20),1),
 Shift(26,Time("Thu",20,21),1),
 Shift(27,Time("Thu",21,22),1),
 Shift(28,Time("Thu",22,23),1)
-]
-
+]"""
 
 """ test 2: FFB 
 shifts = [ 
@@ -176,6 +175,92 @@ Shift(10,Time("Thu",19,20),1),
 Shift(11,Time("Thu",20,21),1),
 Shift(12,Time("Thu",21,22),1)
 ] """
+
+""" test 4: Soc 
+shifts = [ 
+Shift(0,Time("Sun",13,14),1),
+Shift(1,Time("Sun",14,15),1),
+Shift(2,Time("Sun",15,16),1),
+Shift(3,Time("Sun",16,17),1),
+Shift(4,Time("Sun",17,18),1),
+Shift(5,Time("Sun",18,19),1),
+
+Shift(6,Time("Mon",16,17),1),
+Shift(7,Time("Mon",17,18),1),
+Shift(8,Time("Mon",18,19),1),
+
+Shift(9,Time("Tue",16,17),1),
+Shift(10,Time("Tue",17,18),1),
+Shift(11,Time("Tue",18,19),1),
+
+
+Shift(12,Time("Wed",16,17),1),
+Shift(13,Time("Wed",17,18),1),
+Shift(14,Time("Wed",18,19),1),
+
+
+Shift(15,Time("Thu",16,17),1),
+Shift(16,Time("Thu",17,18),1),
+Shift(17,Time("Thu",18,19),1),
+
+
+Shift(18,Time("Fri",16,17),1),
+Shift(19,Time("Fri",17,18),1),
+Shift(20,Time("Fri",18,19),1)
+] """
+
+""" test 5: Soft 
+shifts = [ 
+Shift(1,Time("Mon",17,18.5),1),
+Shift(2,Time("Mon",18.5,20),1),
+
+Shift(3,Time("Tue",17,18.5),1),
+Shift(4,Time("Tue",18.5,20),1),
+
+Shift(5,Time("Wed",17,18.5),1),
+Shift(6,Time("Wed",18.5,20),1),
+
+Shift(7,Time("Thu",17,18.5),1),
+Shift(8,Time("Thu",18.5,20),1),
+
+Shift(9,Time("Fri",17,18.5),1),
+Shift(10,Time("Fri",18.5,20),1),
+
+Shift(11,Time("Sat",12.5,14),1),
+Shift(12,Time("Sat",14,15.5),1),
+Shift(13,Time("Sat",15.5,17),1),
+Shift(14,Time("Sat",17,18.5),1),
+Shift(15,Time("Sat",18.5,20),1),
+Shift(16,Time("Sat",18.5,20),1),
+]"""
+
+""" test 6: WP 
+shifts = [ 
+Shift(1,Time("Mon",18,19),1),
+Shift(2,Time("Mon",19,20),1),
+
+Shift(3,Time("Mon",21,22),1),
+Shift(4,Time("Mon",22,23),1),
+
+Shift(5,Time("Tue",18,19),1),
+Shift(6,Time("Tue",19,20),1),
+Shift(7,Time("Tue",20,21),1),
+
+Shift(8,Time("Tue",22,23),1),
+
+Shift(9,Time("Wed",18,19),1),
+Shift(10,Time("Wed",19,20),1),
+
+Shift(11,Time("Wed",21,22),1),
+Shift(12,Time("Wed",22,23),1),
+
+Shift(13,Time("Thu",18,19),1),
+
+Shift(14,Time("Thu",20,21),1),
+Shift(15,Time("Thu",21,22),1),
+Shift(16,Time("Thu",22,23),1)
+] """
+
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
