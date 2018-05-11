@@ -7,7 +7,7 @@ debug = False
 debug2 = False
 epsilon = 0.01
 max_shift_time = 12.0
-ideal_shift_time = 3
+ideal_shift_times = [(2,2),(3,4)]
 
 def day_to_num(day):
     if day == "Sun": return 1
@@ -108,7 +108,7 @@ Time("Fri",13,24),
 Time("Sat",10,24)],
 [1,2,3,4])
 ]
-""" test 1: BB 
+""" test 1: BB """
 shifts = [ 
 Shift(0,Time("Sun",12,13),1),
 Shift(1,Time("Sun",13,14),1),
@@ -119,6 +119,7 @@ Shift(5,Time("Sun",17,18),1),
 Shift(6,Time("Sun",18,19),1), #same is easy here **
 Shift(7,Time("Sun",19,20),1),
 Shift(8,Time("Sun",20,21),1),
+
 Shift(9,Time("Mon",18,19),1),
 Shift(10,Time("Mon",19,20),1),
 Shift(11,Time("Mon",20,21),1),
@@ -143,7 +144,7 @@ Shift(26,Time("Thu",20,21),1),
 Shift(27,Time("Thu",21,22),1),
 Shift(28,Time("Thu",22,23),1)
 ]
-"""
+
 
 """ test 2: FFB 
 shifts = [ 
@@ -160,7 +161,7 @@ Shift(9,Time("Thu",15.5,16.5),1),
 Shift(10,Time("Fri",15.5,16.5),1)
 ]"""
 
-""" test 3: VB """
+""" test 3: VB 
 shifts = [ 
 Shift(1,Time("Mon",19,20),1),
 Shift(2,Time("Mon",20,21),1),
@@ -174,7 +175,7 @@ Shift(9,Time("Wed",21,22),1),
 Shift(10,Time("Thu",19,20),1),
 Shift(11,Time("Thu",20,21),1),
 Shift(12,Time("Thu",21,22),1)
-]
+] """
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
@@ -233,24 +234,26 @@ def get_name_of_employee_from_var_name(name,number_of_shifts):
 preffered_eq = []   
 #create preferred shifts:
 shifts.sort()
-s=0
-while(s < number_of_shifts - ideal_shift_time):
-    b = True;
-    for i in range(ideal_shift_time-1):
-        if(not is_continious(shifts[s+i].time,shifts[s+i+1].time)):
-            b = False
-    if b:
-        id = ""
-        for i in range(ideal_shift_time-1):
-            id += str(shifts[s+i].id) + "-"
-        id+=str(shifts[s + ideal_shift_time - 1].id)
-        if(debug2): print(id)
-        new_shift = Shift(id,Time(shifts[s].time.day,shifts[s].time.start,shifts[s+ideal_shift_time-1].time.end),1)
-        new_shift.priority = 2  # preferred job
-        shifts.append(new_shift) 
-        new_eq = [s,ideal_shift_time,len(shifts) - 1]  # triplet of the start, length and new location.
-        preffered_eq.append(new_eq)
-    s += 1
+
+for ideal_shift_time in ideal_shift_times:
+    s=0
+    while(s < number_of_shifts - ideal_shift_time[0]):
+        b = True;
+        for i in range(ideal_shift_time[0]-1):
+            if(not is_continious(shifts[s+i].time,shifts[s+i+1].time)):
+                b = False
+        if b:
+            id = ""
+            for i in range(ideal_shift_time[0]-1):
+                id += str(shifts[s+i].id) + "-"
+            id+=str(shifts[s + ideal_shift_time[0] - 1].id)
+            if(debug2): print(id)
+            new_shift = Shift(id,Time(shifts[s].time.day,shifts[s].time.start,shifts[s+ideal_shift_time[0]-1].time.end),1)
+            new_shift.priority = ideal_shift_time[1]  # preferred job
+            shifts.append(new_shift) 
+            new_eq = [s,ideal_shift_time[0],len(shifts) - 1]  # triplet of the start, length and new location.
+            preffered_eq.append(new_eq)
+        s += 1
 
 old_number_of_shifts = number_of_shifts
 number_of_shifts = len(shifts)
