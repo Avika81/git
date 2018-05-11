@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Employee schedule.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MaxFlowAlgorithms\Dinic%27s Algorithm.py" />
     <Compile Include="MaxFlowAlgorithms\Edmonds-Karp Algorithm.py" />
     <Compile Include="MaxFlowAlgorithms\FordFulkersonAlgorithm.py" />
@@ -30,6 +33,9 @@
     <Compile Include="pylinprogmaster\linprog.py" />
     <Compile Include="pylinprogmaster\setup.py" />
     <Compile Include="pylinprogmaster\test_linprog.py" />
+    <Compile Include="Staff schedule.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MaxFlowAlgorithms\" />

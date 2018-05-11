@@ -8,6 +8,7 @@ debug2 = False
 epsilon = 0.01
 max_shift_time = 12.0
 ideal_shift_time = 3
+days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
 
 def day_to_num(day):
     if day == "Sun": return 1
@@ -66,7 +67,6 @@ class Shift:
     def __lt__(self,other):
         return self.time < other.time
 
-days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
 
 employees = [Employee(1,"Bill",
 [Time("Sun",14,24),
@@ -230,65 +230,17 @@ def get_name_of_employee_from_var_name(name,number_of_shifts):
     employee = int(int(var_num) / int(number_of_shifts))
     return employees[employee].name
 
-preffered_eq = []   
-#create preferred shifts:
-shifts.sort()
-s=0
-while(s < number_of_shifts - ideal_shift_time):
-    b = True;
-    for i in range(ideal_shift_time-1):
-        if(not is_continious(shifts[s+i].time,shifts[s+i+1].time)):
-            b = False
-    if b:
-        id = ""
-        for i in range(ideal_shift_time-1):
-            id += str(shifts[s+i].id) + "-"
-        id+=str(shifts[s + ideal_shift_time - 1].id)
-        if(debug2): print(id)
-        new_shift = Shift(id,Time(shifts[s].time.day,shifts[s].time.start,shifts[s+ideal_shift_time-1].time.end),1)
-        new_shift.priority = 2  # preferred job
-        shifts.append(new_shift) 
-        new_eq = [s,ideal_shift_time,len(shifts) - 1]  # triplet of the start, length and new location.
-        preffered_eq.append(new_eq)
-    s += 1
-
-old_number_of_shifts = number_of_shifts
-number_of_shifts = len(shifts)
 if(debug2): 
     for s in shifts:
         print(s.id)
 
 number_variables = number_of_shifts * number_of_employees 
 
-variables = pulp.LpVariable.dicts("x",range(number_variables), 0, 1, cat = 'Integer')
+variables = pulp.LpVariable.dicts("x",range(number_variables), 0, 1, cat = 'Integer') #create integer values of 0 or one for the employment of employee in a shift
 lp_prob = pulp.LpProblem("schedule", pulp.LpMaximize)
 
 # variables are : 0 - shifts-1 those for employee1, and so on.  to get xij, do
 # i * number_of_shifts)+j
-
-#preffered with preffered intersection:
-for s1 in range(old_number_of_shifts,number_of_shifts):
-    l_collisions = []
-    for s2 in range(old_number_of_shifts,number_of_shifts):
-        if(s1 >= s2):
-            continue
-        if(collision(shifts[s1].time, shifts[s2].time)):
-            l_collisions.append(s2)
-    nc = []
-    for e in range(number_of_employees):
-        nc.append((variables[get_index(e,s1,number_of_shifts)],1))
-        for s2 in l_collisions:
-            nc.append((variables[get_index(e,s2,number_of_shifts)],1))
-    lp_prob += pulp.LpAffineExpression(nc) <= 1
-
-# preffered shifts with the regular shift intersection:
-for new_eq in preffered_eq:
-    nc = []
-    for e in range(number_of_employees):
-        for i in range(new_eq[1]):
-            nc.append((variables[get_index(e,new_eq[0]+i,number_of_shifts)],1))
-        nc.append((variables[get_index(e,new_eq[2],number_of_shifts)],1))
-    lp_prob += pulp.LpAffineExpression(nc) <= 1
 
 """
 #each employee is able to work in a single shift only one time
