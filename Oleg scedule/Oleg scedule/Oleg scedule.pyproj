@@ -25,6 +25,9 @@
     <Compile Include="Employee schedule.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="lin_prog_sol.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MaxFlowAlgorithms\Dinic%27s Algorithm.py" />
     <Compile Include="MaxFlowAlgorithms\Edmonds-Karp Algorithm.py" />
     <Compile Include="MaxFlowAlgorithms\FordFulkersonAlgorithm.py" />
@@ -33,7 +36,13 @@
     <Compile Include="pylinprogmaster\linprog.py" />
     <Compile Include="pylinprogmaster\setup.py" />
     <Compile Include="pylinprogmaster\test_linprog.py" />
+    <Compile Include="run.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Staff schedule.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="t.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

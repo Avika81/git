@@ -5,9 +5,15 @@ import pulp
 
 debug = False
 debug2 = False
-epsilon = 1
+debug3 = False
+debug_var = False
+epsilon_1 = 0.01
+epsilon_2 = 0.01
+num_of_hours_in_day = 24
+
 max_shift_time = 12.0
-ideal_shift_times = [(3,1000),(2,100)]
+ideal_shift_times = [(4,10),(3,7),(2,3)]  # 4+1 < 3+2
+yet_count_as_continous = 1  # the legnth of maximal break
 
 def day_to_num(day):
     if day == "Sun": return 1
@@ -19,20 +25,14 @@ def day_to_num(day):
     elif day == "Sat": return 7
 
 class Time:
-    day = ""
     start = 0
     end = 0
-    def __init__(self, day,start,end):
-        self.day = day
-        self.start = start
-        self.end = end
+    def __init__(self, day_start,start,day_end,end):
+        self.start = start + num_of_hours_in_day * day_to_num(day_start)
+        self.end = end + num_of_hours_in_day * day_to_num(day_end)
     def __eq__(self,other):
-        if(self.day != other.day):
-            return False
         return self.start == other.start
     def __lt__(self,other):
-        if(self.day!=other.day):
-            return day_to_num(self.day)<day_to_num(other.day)
         return self.start < other.start
 
 class Employee:
@@ -52,7 +52,7 @@ class Employee:
 
 class Shift:
     id = 0
-    time = Time("",0,0)
+    time = Time("Sun",0,"Sun",0)
     job_id = 0
     number_employees_needed = 1
     priority = 1
@@ -69,7 +69,8 @@ class Shift:
 days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
 
 employees = [Employee(1,"Bill",
-[Time("Sun",14,24),
+[Time("Sun",8.5,"Sun",24),
+ Time("Sun",14,24),
 Time("Mon",15,24),
 Time("Tue",16.5,24),
 Time("Wed",3,24),
@@ -99,7 +100,8 @@ Time("Fri",13,18)],
 [1,2,3,4]),
 
 Employee(4,"Amy",
-[Time("Sun",14,24),
+[Time("Sun",8.5,24),
+Time("Sun",14,24),
 Time("Mon",15,24),
 Time("Tue",16.5,24),
 Time("Wed",15,18),
@@ -108,7 +110,7 @@ Time("Fri",13,24),
 Time("Sat",10,24)],
 [1,2,3,4])
 ]
-""" test 1: BB 
+""" test 1: BB """
 shifts = [ 
 Shift(0,Time("Sun",12,13),1),
 Shift(1,Time("Sun",13,14),1),
@@ -143,7 +145,7 @@ Shift(25,Time("Thu",19,20),1),
 Shift(26,Time("Thu",20,21),1),
 Shift(27,Time("Thu",21,22),1),
 Shift(28,Time("Thu",22,23),1)
-]"""
+]
 
 """ test 2: FFB 
 shifts = [ 
@@ -162,23 +164,18 @@ Shift(10,Time("Fri",15.5,16.5),1)
 
 """ test 3: VB 
 shifts = [ 
-Shift(0,Time("Mon",19,20),1),
-Shift(1,Time("Mon",20,21),1),
-Shift(2,Time("Mon",21,22),1),
-Shift(3,Time("Mon",22,23),1),
+Shift(1,Time("Mon",19,20),1),
+Shift(2,Time("Mon",20,21),1),
+Shift(3,Time("Mon",21,22),1),
 Shift(4,Time("Tue",19,20),1),
 Shift(5,Time("Tue",20,21),1),
 Shift(6,Time("Tue",21,22),1),
-Shift(7,Time("Tue",22,23),1),
-Shift(8,Time("Wed",19,20),1),
-Shift(9,Time("Wed",20,21),1),
-Shift(10,Time("Wed",21,22),1),
-Shift(11,Time("Wed",22,23),1),
-
-Shift(12,Time("Thu",19,20),1),
-Shift(13,Time("Thu",20,21),1),
-Shift(14,Time("Thu",21,22),1),
-Shift(15,Time("Thu",22,23),1)
+Shift(7,Time("Wed",19,20),1),
+Shift(8,Time("Wed",20,21),1),
+Shift(9,Time("Wed",21,22),1),
+Shift(10,Time("Thu",19,20),1),
+Shift(11,Time("Thu",20,21),1),
+Shift(12,Time("Thu",21,22),1)
 ] """
 
 """ test 4: Soc 
@@ -198,12 +195,17 @@ Shift(9,Time("Tue",16,17),1),
 Shift(10,Time("Tue",17,18),1),
 Shift(11,Time("Tue",18,19),1),
 
+
 Shift(12,Time("Wed",16,17),1),
 Shift(13,Time("Wed",17,18),1),
 Shift(14,Time("Wed",18,19),1),
+
+
 Shift(15,Time("Thu",16,17),1),
 Shift(16,Time("Thu",17,18),1),
 Shift(17,Time("Thu",18,19),1),
+
+
 Shift(18,Time("Fri",16,17),1),
 Shift(19,Time("Fri",17,18),1),
 Shift(20,Time("Fri",18,19),1)
@@ -211,30 +213,30 @@ Shift(20,Time("Fri",18,19),1)
 
 """ test 5: Soft 
 shifts = [ 
-Shift(0,Time("Mon",17,18.5),1),
-Shift(1,Time("Mon",18.5,20),1),
+Shift(1,Time("Mon",17,18.5),1),
+Shift(2,Time("Mon",18.5,20),1),
 
-Shift(2,Time("Tue",17,18.5),1),
-Shift(3,Time("Tue",18.5,20),1),
+Shift(3,Time("Tue",17,18.5),1),
+Shift(4,Time("Tue",18.5,20),1),
 
-Shift(4,Time("Wed",17,18.5),1),
-Shift(5,Time("Wed",18.5,20),1),
+Shift(5,Time("Wed",17,18.5),1),
+Shift(6,Time("Wed",18.5,20),1),
 
-Shift(6,Time("Thu",17,18.5),1),
-Shift(7,Time("Thu",18.5,20),1),
+Shift(7,Time("Thu",17,18.5),1),
+Shift(8,Time("Thu",18.5,20),1),
 
-Shift(8,Time("Fri",17,18.5),1),
-Shift(9,Time("Fri",18.5,20),1),
+Shift(9,Time("Fri",17,18.5),1),
+Shift(10,Time("Fri",18.5,20),1),
 
-Shift(10,Time("Sat",12.5,14),1),
-Shift(11,Time("Sat",14,15.5),1),
-Shift(12,Time("Sat",15.5,17),1),
-Shift(13,Time("Sat",17,18.5),1),
-Shift(14,Time("Sat",18.5,20),1),
+Shift(11,Time("Sat",12.5,14),1),
+Shift(12,Time("Sat",14,15.5),1),
+Shift(13,Time("Sat",15.5,17),1),
+Shift(14,Time("Sat",17,18.5),1),
 Shift(15,Time("Sat",18.5,20),1),
+Shift(16,Time("Sat",18.5,20),1),
 ]"""
 
-""" test 6: WP
+""" test 6: WP 
 shifts = [ 
 Shift(1,Time("Mon",18,19),1),
 Shift(2,Time("Mon",19,20),1),
@@ -265,8 +267,6 @@ number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
 def collision(x,y):
-    if(x.day != y.day):
-        return(False)
     if(x.end <= y.start):
         return(False)
     if(x.start >= y.end):
@@ -274,8 +274,6 @@ def collision(x,y):
     return(True)
 
 def in_time(x,y):  # check if x is in y
-    if(x.day != y.day):
-        return(False)
     if(x.start < y.start):
         return(False)
     if(x.end > y.end):
@@ -298,9 +296,7 @@ def get_index(employee,shift,number_of_shifts):
     return(employee*number_of_shifts+shift)
 
 def is_continious(t1,t2):
-    if(t1.day!=t2.day):
-        return False
-    elif(t1.end == t2.start):
+    if(t1.end >= t2.start  - yet_count_as_continous):
         return True
     return False
 
@@ -316,6 +312,9 @@ def get_name_of_employee_from_var_name(name,number_of_shifts):
     employee = int(int(var_num) / int(number_of_shifts))
     return employees[employee].name
 
+def get_variable_index_from_var_name(name,number_of_shifts):
+    str = name[2:]
+    return int(str)
 preffered_eq = []   
 #create preferred shifts:
 shifts.sort()
@@ -347,9 +346,11 @@ if(debug2):
 
 number_variables = number_of_shifts * number_of_employees 
 
-variables = pulp.LpVariable.dicts("x",range(number_variables),   0, 1,cat="Integer")
-lp_prob = pulp.LpProblem("schedule", pulp.LpMaximize)
+variables_cont = pulp.LpVariable.dicts("x",range(number_variables),   0, 1,cat="Continuous")
+lp_prob_cont = pulp.LpProblem("schedule", pulp.LpMaximize)
 
+variables_int = pulp.LpVariable.dicts("y",range(number_variables),   0, 1,cat="Integer")
+lp_prob_int = pulp.LpProblem("schedule_int", pulp.LpMaximize)
 # variables are : 0 - shifts-1 those for employee1, and so on.  to get xij, do
 # i * number_of_shifts)+j
 
@@ -361,68 +362,91 @@ for s1 in range(old_number_of_shifts,number_of_shifts):
             continue
         if(collision(shifts[s1].time, shifts[s2].time)):
             l_collisions.append(s2)
-    nc = []
+    nc_int = []
+    nc_cont = []
     for e in range(number_of_employees):
-        nc.append((variables[get_index(e,s1,number_of_shifts)],1))
+        nc_int.append((variables_int[get_index(e,s1,number_of_shifts)],1))
+        nc_cont.append((variables_cont[get_index(e,s1,number_of_shifts)],1))
+        
         for s2 in l_collisions:
-            nc.append((variables[get_index(e,s2,number_of_shifts)],1))
-    lp_prob += pulp.LpAffineExpression(nc) <= 1
+            nc_int.append((variables_int[get_index(e,s2,number_of_shifts)],1))
+            nc_cont.append((variables_cont[get_index(e,s2,number_of_shifts)],1))
+    lp_prob_int += pulp.LpAffineExpression(nc_int) <= 1
+    
+    lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= 1
 
 # preffered shifts with the regular shift intersection:
 for new_eq in preffered_eq:
-    nc = []
+    nc_int = []
+    nc_cont = []
+    
     for e in range(number_of_employees):
         for i in range(new_eq[1]):
-            nc.append((variables[get_index(e,new_eq[0]+i,number_of_shifts)],1))
-        nc.append((variables[get_index(e,new_eq[2],number_of_shifts)],1))
-    lp_prob += pulp.LpAffineExpression(nc) <= 1
-"""
-#each employee is able to work in a single shift only one time
-for i in range(number_variables):
-    new_line = np.zeros(number_variables)
-    new_line[i] = 1
-    A.append(new_line)
-    b.append(1)
-"""
+            nc_int.append((variables_int[get_index(e,new_eq[0]+i,number_of_shifts)],1))
+            nc_cont.append((variables_cont[get_index(e,new_eq[0]+i,number_of_shifts)],1))
+        nc_int.append((variables_int[get_index(e,new_eq[2],number_of_shifts)],1))
+        nc_cont.append((variables_cont[get_index(e,new_eq[2],number_of_shifts)],1))
+
+    lp_prob_int += pulp.LpAffineExpression(nc_int) <= 1
+    lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= 1
+
 #max of 1 shift a day (maybe a longer one)
 for e in range(number_of_employees):
     for d in range(len(days)):
-        nc = []
+        nc_int = []
+        nc_cont = []
+        
         for s in range(number_of_shifts):
             if(shifts[s].time.day == days[d]):
-                nc.append((variables[get_index(e,s,number_of_shifts)],1))
-        lp_prob += pulp.LpAffineExpression(nc) <= 1
+                nc_int.append((variables_int[get_index(e,s,number_of_shifts)],1))
+                nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],1))
+        lp_prob_int += pulp.LpAffineExpression(nc_int) <= 1
+        lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= 1
 
 
 #shifts constraints:
 for s in range(number_of_shifts):
     new_line = np.zeros(number_variables)
-    nc = []
+    nc_int = []
+    nc_cont = []
+    
     for e in range(number_of_employees):
         if(could_do_this_job(shifts[s], employees[e])):  # the employee can do it?
-            nc.append((variables[get_index(e,s,number_of_shifts)],1))
+            nc_int.append((variables_int[get_index(e,s,number_of_shifts)],1))
+            nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],1))
             
         else:  # should kill this variable: (so adding the constaint of xij==0
-            nl = []
-            nl.append((variables[get_index(e,s,number_of_shifts)],1))
-            lp_prob += pulp.LpAffineExpression(nl) == 0
-    lp_prob += pulp.LpAffineExpression(nc) <= shifts[s].number_employees_needed
+            nl_int = []
+            nl_cont = []
+            nl_int.append((variables_int[get_index(e,s,number_of_shifts)],1))
+            nl_cont.append((variables_cont[get_index(e,s,number_of_shifts)],1))
+            lp_prob_int += pulp.LpAffineExpression(nl_int) == 0
+            lp_prob_cont += pulp.LpAffineExpression(nl_cont) == 0
+    lp_prob_int += pulp.LpAffineExpression(nc_int) <= shifts[s].number_employees_needed
+    lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= shifts[s].number_employees_needed
 
 #week constraints:
 for e in range(number_of_employees):
-    nc = []
+    nc_int = []
+    nc_cont = []
+    
     for s in range(number_of_shifts):
-        nc.append((variables[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))
-    lp_prob += pulp.LpAffineExpression(nc) <= employees[e].max_week
-   
+        nc_int.append((variables_int[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))
+        nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))
+    lp_prob_int += pulp.LpAffineExpression(nc_int) <= employees[e].max_week
+    lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= employees[e].max_week
 #day constraints:
 for e in range(number_of_employees):
     for d in range(len(days)):
-        nc = []
+        nc_int = []
+        nc_cont = []
+        
         for s in range(number_of_shifts):
             if(shifts[s].time.day == days[d]):
-                nc.append((variables[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))
-        lp_prob += pulp.LpAffineExpression(nc) <= employees[e].max_day[d]
+                nc_int.append((variables_int[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))
+                nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))        
+        lp_prob_int += pulp.LpAffineExpression(nc_int) <= employees[e].max_day[d]
+        lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= employees[e].max_day[d]
        
 #check that each employee is only in one place at a time
 for s1 in range(number_of_shifts):
@@ -433,25 +457,78 @@ for s1 in range(number_of_shifts):
         if(collision(shifts[s1].time, shifts[s2].time)):
             l_collisions.append(s2)
     for e in range(number_of_employees):
-        nc = []
+        nc_int = []
+        nc_cont = []
+        
         new_line = np.zeros(number_variables)
-        nc.append((variables[get_index(e,s1,number_of_shifts)],1))
+        nc_int.append((variables_int[get_index(e,s1,number_of_shifts)],1))
+        nc_cont.append((variables_cont[get_index(e,s1,number_of_shifts)],1))
+        
         for s2 in l_collisions:
-            nc.append((variables[get_index(e,s2,number_of_shifts)],1))
-        lp_prob += pulp.LpAffineExpression(nc) <= 1
+            nc_int.append((variables_int[get_index(e,s2,number_of_shifts)],1))
+            nc_cont.append((variables_cont[get_index(e,s2,number_of_shifts)],1))
+         
+        lp_prob_int += pulp.LpAffineExpression(nc_int) <= 1
+        lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= 1
        
-c = []
+c_int = []
+c_cont = []
+
 for e in range(number_of_employees):
     for s in range(number_of_shifts):
-        bonus = np.random.uniform(0,epsilon)
-        a = shifts[s].priority + bonus
-        c.append((variables[get_index(e,s,number_of_shifts)],a)) 
-lp_prob += pulp.LpAffineExpression(c) , "total_res"
+        bonus = np.random.uniform(0,epsilon_1)
+        c_int.append((variables_int[get_index(e,s,number_of_shifts)],shifts[s].priority + bonus))
+        c_cont.append((variables_cont[get_index(e,s,number_of_shifts)],shifts[s].priority + bonus))
 
-if(debug): print(lp_prob)
+lp_prob_int += pulp.LpAffineExpression(c_int) , "total_res"
+lp_prob_cont += pulp.LpAffineExpression(c_cont) , "total_res"
 
-lp_prob.solve()
+if(debug): print(lp_prob_cont)
+if(debug): print("INTTT")
+if(debug): print(lp_prob_int)
 
+lp_prob_cont.solve()
+
+if pulp.LpStatus[lp_prob_cont.status] != "Optimal":
+    print("error the problem is: " + pulp.LpStatus[lp_prob_cont.status])
+
+else:
+    res = lp_prob_cont.variables()
+    if(debug3):
+        for i in range(len(res)):
+            print("{} = {}".format(lp_prob_cont.variables()[i].name, lp_prob_cont.variables()[i].varValue))
+    for v in res:
+        if(debug3):
+            if(v.varValue != 1 and v.varValue != 0):
+                print("{} = {}".format(v.name, v.varValue))
+        if(v.varValue == 1):
+            ne = []
+            index = get_variable_index_from_var_name(v.name,number_of_shifts)
+            ne.append((variables_int[index],1))
+            lp_prob_int += pulp.LpAffineExpression(ne) == 1
+
+print("cont : " + str(pulp.value(lp_prob_cont.objective)))
+
+lp_prob_int.solve()
+
+if pulp.LpStatus[lp_prob_int.status] != "Optimal":
+    print("error the problem is: " + pulp.LpStatus[lp_prob_int.status])
+else:
+    res = lp_prob_int.variables()
+    if(debug_var):
+        for i in range(len(res)):
+            print("{} = {}".format(lp_prob_int.variables()[i].name, lp_prob_int.variables()[i].varValue))
+    for v in res:
+        if(v.varValue == 0):
+            continue
+        else:
+            output = "shift " + str(get_shift_id_from_var_name(v.name,number_of_shifts,shifts)) + ": "
+            output += get_name_of_employee_from_var_name(v.name,number_of_shifts)
+            if(debug_var) : output += "\tvar: " + str(v.name) +"-"+ str(v.varValue)
+            print(output)
+print("int : " + str(pulp.value(lp_prob_int.objective)))
+
+"""
 if pulp.LpStatus[lp_prob.status] != "Optimal":
     print("error the problem is: " + pulp.LpStatus[lp_prob.status])
 else:
@@ -467,128 +544,5 @@ else:
             output += get_name_of_employee_from_var_name(v.name,number_of_shifts)
             if(debug) : output += "\tvar: " + str(v.name) +"-"+ str(v.varValue)
             print(output)
-print(pulp.value(lp_prob.objective))
-""" the linprog.py solution:
-#Ax<=b,max <c,x>
-A = []
-b = []  
-c = []
-eq_left = []
-eq_right = []
+print(pulp.value(lp_prob.objective))"""
 
-
-number_variables = number_of_shifts * number_of_employees 
-# variables are : 0 - shifts-1 those for employee1, and so on.  to get xij, do
-# i * number_of_shifts)+j
-
-#preffered with preffered intersection:
-for s1 in range(old_number_of_shifts,number_of_shifts):
-    l_collisions = []
-    for s2 in range(old_number_of_shifts,number_of_shifts):
-        if(s1 >= s2):
-            continue
-        if(collision(shifts[s1].time, shifts[s2].time)):
-            l_collisions.append(s2)
-    for e in range(number_of_employees):
-        new_line = np.zeros(number_variables)
-        new_line[get_index(e,s1,number_of_shifts)] = 1
-        for s2 in l_collisions:
-            new_line[get_index(e,s2,number_of_shifts)] = 1
-    A.append(new_line)
-    b.append(1)
-
-# preffered shifts with the regular shift intersection:
-for new_eq in preffered_eq:
-    eq = np.zeros(number_variables)
-    for i in range(new_eq[1]):
-        eq[new_eq[0]+i] = 1
-    eq[new_eq[2]] = 1
-    A.append(eq)
-    b.append(1)
-#each employee is able to work in a single shift only one time
-for i in range(number_variables):
-    new_line = np.zeros(number_variables)
-    new_line[i] = 1
-    A.append(new_line)
-    b.append(1)
-
-#shifts constraints:
-shift_num = -1
-for s in range(number_of_shifts):
-    shift_num += 1
-    new_line = np.zeros(number_variables)
-    for e in range(number_of_employees):
-        if(could_do_this_job(shifts[s], employees[e])):  # the employee can do it?
-            new_line[get_index(e,s,number_of_shifts)] = 1 # he is only one employee
-
-        else:  # should kill this variable: (so adding the constaint of xij==0
-            nl = np.zeros(number_variables)
-            nl[get_index(e,s,number_of_shifts)] = 1
-            eq_left.append(nl)
-            eq_right.append(0)
-    A.append(new_line)
-    b.append(shifts[s].number_employees_needed)
-
-#week constraints:
-for e in range(number_of_employees):
-    new_line = np.zeros(number_variables)
-    for s in range(number_of_shifts):
-        new_line[get_index(e,s,number_of_shifts)] = total_time(shifts[s].time)  # the length of this shift
-    A.append(new_line)
-    b.append(employees[e].max_week)
-
-#day constraints:
-for e in range(number_of_employees):
-    for d in range(len(days)):
-        new_line = np.zeros(number_variables)
-        for s in range(number_of_shifts):
-            if(shifts[s].time.day == days[d]):
-                new_line[get_index(e,s,number_of_shifts)] = total_time(shifts[s].time)
-        A.append(new_line)
-        b.append(employees[e].max_day[d])
-
-#check that each employee is only in one place at a time
-for s1 in range(number_of_shifts):
-    l_collisions = []
-    for s2 in range(number_of_shifts):
-        if(s1 >= s2):
-            continue
-        if(collision(shifts[s1].time, shifts[s2].time)):
-            l_collisions.append(s2)
-    for e in range(number_of_employees):
-        new_line = np.zeros(number_variables)
-        new_line[get_index(e,s1,number_of_shifts)] = 1
-        for s2 in l_collisions:
-            new_line[get_index(e,s2,number_of_shifts)] = 1
-        A.append(new_line)
-        b.append(1)
-
-if(debug):
-    for row in range(len(A)):
-        output = str(A[row]) + "<=" + str(b[row])
-        print(output)
-
-c = np.zeros(number_variables)
-for e in range(number_of_employees):
-    for s in range(number_of_shifts):
-        bonus = np.random.uniform(0,epsilon)
-        c[get_index(e,s,number_of_shifts)] = - shifts[s].priority * total_time(shifts[s].time) - bonus
-
-resolution,sol = linprog.linsolve(c,A,b,eq_left,eq_right,range(number_variables))
-
-if(debug): print(sol)
-
-if resolution != "solved":
-    print(resolution)
-else:
-    for s in range(number_of_shifts):
-        l = []
-        print('shift ' + str(shifts[s].id))
-        for e in range(number_of_employees):
-            if sol[get_index(e,s,number_of_shifts)] > 1 - 1/max_shift_time:
-                l.append(employees[e])
-            output = ""
-            for e in l:
-                output += str(e.name) + "," 
-        print("employees: " + output)
-"""
