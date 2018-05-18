@@ -3,6 +3,7 @@ import numpy as np
 import random
 import pulp
 
+d = True
 debug = False
 debug2 = False
 debug3 = False
@@ -16,7 +17,8 @@ ideal_shift_times = [(4,15),(3,13),(2,5)]  # 4+1 < 3+2
 yet_count_as_continous = 1  # the legnth of maximal break
 
 def day_to_num(day):
-    if day == "Sun": return 1
+    if   day == ""   : return 0
+    elif day == "Sun": return 1
     elif day == "Mon": return 2
     elif day == "Tue": return 3
     elif day == "Wed": return 4
@@ -25,21 +27,18 @@ def day_to_num(day):
     elif day == "Sat": return 7
 
 class Time:
-    day = ""
     start = 0
     end = 0
-    def __init__(self, day,start,end):
-        self.day = day
-        self.start = start
-        self.end = end
+    def __init__(self, start, end, day = ""):
+        self.start = day_to_num(day)*24 + start
+        self.end = day_to_num(day)*24 + end
     def __eq__(self,other):
-        if(self.day != other.day):
-            return False
         return self.start == other.start
     def __lt__(self,other):
-        if(self.day!=other.day):
-            return day_to_num(self.day)<day_to_num(other.day)
         return self.start < other.start
+
+def tTime(day,start,end):
+    return(Time(start,end,day))
 
 class Employee:
     id = 0
@@ -58,7 +57,7 @@ class Employee:
 
 class Shift:
     id = 0
-    time = Time("",0,0)
+    time = Time(0,0)
     job_id = 0
     number_employees_needed = 1
     priority = 1
@@ -75,206 +74,212 @@ class Shift:
 days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
 
 employees = [Employee(1,"Bill",
-[Time("Sun",8.5,24),
- Time("Sun",14,24),
-Time("Mon",15,24),
-Time("Tue",16.5,24),
-Time("Wed",3,24),
-Time("Thu",16.5,24),
-Time("Fri",13,24),
-Time("Sat",10,24)],
+[tTime("Sun",8.5,24),
+ tTime("Sun",14,24),
+tTime("Mon",15,24),
+tTime("Tue",16.5,24),
+tTime("Wed",3,24),
+tTime("Thu",16.5,24),
+tTime("Fri",13,24),
+tTime("Sat",10,24)],
 [1,2,3,4]),
 
 Employee(2,"Jenny",
-[Time("Sun",8.5,24),
-Time("Mon",12,24),
-Time("Tue",12,24),
-Time("Wed",12,18),
-Time("Wed",21,24),
-Time("Thu",12,24),
-Time("Fri",12,24),
-Time("Sat",8.5,24)],
+[tTime("Sun",8.5,24),
+tTime("Mon",12,24),
+tTime("Tue",12,24),
+tTime("Wed",12,18),
+tTime("Wed",21,24),
+tTime("Thu",12,24),
+tTime("Fri",12,24),
+tTime("Sat",8.5,24)],
 [1,2,3,4]),
 
 Employee(3,"Tom",
-[Time("Sun",12,24),
-Time("Mon",15,24),
-Time("Tue",15,24),
-Time("Wed",15,24),
-Time("Thu",15,24),
-Time("Fri",13,18)],
+[tTime("Sun",12,24),
+tTime("Mon",15,24),
+tTime("Tue",15,24),
+tTime("Wed",15,24),
+tTime("Thu",15,24),
+tTime("Fri",13,18)],
 [1,2,3,4]),
 
 Employee(4,"Amy",
-[Time("Sun",8.5,24),
-Time("Sun",14,24),
-Time("Mon",15,24),
-Time("Tue",16.5,24),
-Time("Wed",15,18),
-Time("Thu",16.5,24),
-Time("Fri",13,24),
-Time("Sat",10,24)],
+[tTime("Sun",8.5,24),
+tTime("Sun",14,24),
+tTime("Mon",15,24),
+tTime("Tue",16.5,24),
+tTime("Wed",15,18),
+tTime("Thu",16.5,24),
+tTime("Fri",13,24),
+tTime("Sat",10,24)],
 [1,2,3,4])
 ]
 """ test 1: BB """
 shifts = [ 
-Shift(0,Time("Sun",12,13),1),
-Shift(1,Time("Sun",13,14),1),
-Shift(2,Time("Sun",14,15),1),
-Shift(3,Time("Sun",15,16),1),
-Shift(4,Time("Sun",16,17),1),
-Shift(5,Time("Sun",17,18),1),
-Shift(6,Time("Sun",18,19),1),
-Shift(7,Time("Sun",19,20),1),
-Shift(8,Time("Sun",20,21),1),
+Shift(0,tTime("Sun",12,13),1),
+Shift(1,tTime("Sun",13,14),1),
+Shift(2,tTime("Sun",14,15),1),
+Shift(3,tTime("Sun",15,16),1),
+Shift(4,tTime("Sun",16,17),1),
+Shift(5,tTime("Sun",17,18),1),
+Shift(6,tTime("Sun",18,19),1),
+Shift(7,tTime("Sun",19,20),1),
+Shift(8,tTime("Sun",20,21),1),
 
-Shift(9,Time("Mon",18,19),1),
-Shift(10,Time("Mon",19,20),1),
-Shift(11,Time("Mon",20,21),1),
-Shift(12,Time("Mon",21,22),1),
-Shift(13,Time("Mon",22,23),1),
+Shift(9,tTime("Mon",18,19),1),
+Shift(10,tTime("Mon",19,20),1),
+Shift(11,tTime("Mon",20,21),1),
+Shift(12,tTime("Mon",21,22),1),
+Shift(13,tTime("Mon",22,23),1),
 
-Shift(14,Time("Tue",18,19),1),
-Shift(15,Time("Tue",19,20),1),
-Shift(16,Time("Tue",20,21),1),
-Shift(17,Time("Tue",21,22),1),
-Shift(18,Time("Tue",22,23),1),
+Shift(14,tTime("Tue",18,19),1),
+Shift(15,tTime("Tue",19,20),1),
+Shift(16,tTime("Tue",20,21),1),
+Shift(17,tTime("Tue",21,22),1),
+Shift(18,tTime("Tue",22,23),1),
 
-Shift(19,Time("Wed",18,19),1),
-Shift(20,Time("Wed",19,20),1),
-Shift(21,Time("Wed",20,21),1),
-Shift(22,Time("Wed",21,22),1),
-Shift(23,Time("Wed",22,23),1),
+Shift(19,tTime("Wed",18,19),1),
+Shift(20,tTime("Wed",19,20),1),
+Shift(21,tTime("Wed",20,21),1),
+Shift(22,tTime("Wed",21,22),1),
+Shift(23,tTime("Wed",22,23),1),
 
-Shift(24,Time("Thu",18,19),1),
-Shift(25,Time("Thu",19,20),1),
-Shift(26,Time("Thu",20,21),1),
-Shift(27,Time("Thu",21,22),1),
-Shift(28,Time("Thu",22,23),1)
+Shift(24,tTime("Thu",18,19),1),
+Shift(25,tTime("Thu",19,20),1),
+Shift(26,tTime("Thu",20,21),1),
+Shift(27,tTime("Thu",21,22),1),
+Shift(28,tTime("Thu",22,23),1)
 ]
 
 """ test 2: FFB 
 shifts = [ 
-Shift(0,Time("Sun",10.5,11.5),1),
-Shift(1,Time("Sun",11.5,12.5),1),
-Shift(2,Time("Sun",12.5,13.5),1),
-Shift(3,Time("Sun",13.5,14.5),1),
-Shift(4,Time("Sun",14.5,15.5),1),
-Shift(5,Time("Sun",15.5,16.5),1),
-Shift(6,Time("Mon",15.5,16.5),1),
-Shift(7,Time("Tue",15.5,16.5),1),
-Shift(8,Time("Wed",15.5,16.5),1),
-Shift(9,Time("Thu",15.5,16.5),1),
-Shift(10,Time("Fri",15.5,16.5),1)
+Shift(0,tTime("Sun",10.5,11.5),1),
+Shift(1,tTime("Sun",11.5,12.5),1),
+Shift(2,tTime("Sun",12.5,13.5),1),
+Shift(3,tTime("Sun",13.5,14.5),1),
+Shift(4,tTime("Sun",14.5,15.5),1),
+Shift(5,tTime("Sun",15.5,16.5),1),
+Shift(6,tTime("Mon",15.5,16.5),1),
+Shift(7,tTime("Tue",15.5,16.5),1),
+Shift(8,tTime("Wed",15.5,16.5),1),
+Shift(9,tTime("Thu",15.5,16.5),1),
+Shift(10,tTime("Fri",15.5,16.5),1)
 ]
 
  test 3: VB 
 shifts = [ 
-Shift(1,Time("Mon",19,20),1),
-Shift(2,Time("Mon",20,21),1),
-Shift(3,Time("Mon",21,22),1),
-Shift(4,Time("Tue",19,20),1),
-Shift(5,Time("Tue",20,21),1),
-Shift(6,Time("Tue",21,22),1),
-Shift(7,Time("Wed",19,20),1),
-Shift(8,Time("Wed",20,21),1),
-Shift(9,Time("Wed",21,22),1),
-Shift(10,Time("Thu",19,20),1),
-Shift(11,Time("Thu",20,21),1),
-Shift(12,Time("Thu",21,22),1)
+Shift(1,tTime("Mon",19,20),1),
+Shift(2,tTime("Mon",20,21),1),
+Shift(3,tTime("Mon",21,22),1),
+Shift(4,tTime("Tue",19,20),1),
+Shift(5,tTime("Tue",20,21),1),
+Shift(6,tTime("Tue",21,22),1),
+Shift(7,tTime("Wed",19,20),1),
+Shift(8,tTime("Wed",20,21),1),
+Shift(9,tTime("Wed",21,22),1),
+Shift(10,tTime("Thu",19,20),1),
+Shift(11,tTime("Thu",20,21),1),
+Shift(12,tTime("Thu",21,22),1)
 ] 
 
  test 4: Soc 
 shifts = [ 
-Shift(0,Time("Sun",13,14),1),
-Shift(1,Time("Sun",14,15),1),
-Shift(2,Time("Sun",15,16),1),
-Shift(3,Time("Sun",16,17),1),
-Shift(4,Time("Sun",17,18),1),
-Shift(5,Time("Sun",18,19),1),
+Shift(0,tTime("Sun",13,14),1),
+Shift(1,tTime("Sun",14,15),1),
+Shift(2,tTime("Sun",15,16),1),
+Shift(3,tTime("Sun",16,17),1),
+Shift(4,tTime("Sun",17,18),1),
+Shift(5,tTime("Sun",18,19),1),
 
-Shift(6,Time("Mon",16,17),1),
-Shift(7,Time("Mon",17,18),1),
-Shift(8,Time("Mon",18,19),1),
+Shift(6,tTime("Mon",16,17),1),
+Shift(7,tTime("Mon",17,18),1),
+Shift(8,tTime("Mon",18,19),1),
 
-Shift(9,Time("Tue",16,17),1),
-Shift(10,Time("Tue",17,18),1),
-Shift(11,Time("Tue",18,19),1),
-
-
-Shift(12,Time("Wed",16,17),1),
-Shift(13,Time("Wed",17,18),1),
-Shift(14,Time("Wed",18,19),1),
+Shift(9,tTime("Tue",16,17),1),
+Shift(10,tTime("Tue",17,18),1),
+Shift(11,tTime("Tue",18,19),1),
 
 
-Shift(15,Time("Thu",16,17),1),
-Shift(16,Time("Thu",17,18),1),
-Shift(17,Time("Thu",18,19),1),
+Shift(12,tTime("Wed",16,17),1),
+Shift(13,tTime("Wed",17,18),1),
+Shift(14,tTime("Wed",18,19),1),
 
 
-Shift(18,Time("Fri",16,17),1),
-Shift(19,Time("Fri",17,18),1),
-Shift(20,Time("Fri",18,19),1)
+Shift(15,tTime("Thu",16,17),1),
+Shift(16,tTime("Thu",17,18),1),
+Shift(17,tTime("Thu",18,19),1),
+
+
+Shift(18,tTime("Fri",16,17),1),
+Shift(19,tTime("Fri",17,18),1),
+Shift(20,tTime("Fri",18,19),1)
 ] 
 
  test 5: Soft 
 shifts = [ 
-Shift(1,Time("Mon",17,18.5),1),
-Shift(2,Time("Mon",18.5,20),1),
+Shift(1,tTime("Mon",17,18.5),1),
+Shift(2,tTime("Mon",18.5,20),1),
 
-Shift(3,Time("Tue",17,18.5),1),
-Shift(4,Time("Tue",18.5,20),1),
+Shift(3,tTime("Tue",17,18.5),1),
+Shift(4,tTime("Tue",18.5,20),1),
 
-Shift(5,Time("Wed",17,18.5),1),
-Shift(6,Time("Wed",18.5,20),1),
+Shift(5,tTime("Wed",17,18.5),1),
+Shift(6,tTime("Wed",18.5,20),1),
 
-Shift(7,Time("Thu",17,18.5),1),
-Shift(8,Time("Thu",18.5,20),1),
+Shift(7,tTime("Thu",17,18.5),1),
+Shift(8,tTime("Thu",18.5,20),1),
 
-Shift(9,Time("Fri",17,18.5),1),
-Shift(10,Time("Fri",18.5,20),1),
+Shift(9,tTime("Fri",17,18.5),1),
+Shift(10,tTime("Fri",18.5,20),1),
 
-Shift(11,Time("Sat",12.5,14),1),
-Shift(12,Time("Sat",14,15.5),1),
-Shift(13,Time("Sat",15.5,17),1),
-Shift(14,Time("Sat",17,18.5),1),
-Shift(15,Time("Sat",18.5,20),1),
-Shift(16,Time("Sat",18.5,20),1),
+Shift(11,tTime("Sat",12.5,14),1),
+Shift(12,tTime("Sat",14,15.5),1),
+Shift(13,tTime("Sat",15.5,17),1),
+Shift(14,tTime("Sat",17,18.5),1),
+Shift(15,tTime("Sat",18.5,20),1),
+Shift(16,tTime("Sat",18.5,20),1),
 ]
 
  test 6: WP 
 shifts = [ 
-Shift(1,Time("Mon",18,19),1),
-Shift(2,Time("Mon",19,20),1),
+Shift(1,tTime("Mon",18,19),1),
+Shift(2,tTime("Mon",19,20),1),
 
-Shift(3,Time("Mon",21,22),1),
-Shift(4,Time("Mon",22,23),1),
+Shift(3,tTime("Mon",21,22),1),
+Shift(4,tTime("Mon",22,23),1),
 
-Shift(5,Time("Tue",18,19),1),
-Shift(6,Time("Tue",19,20),1),
-Shift(7,Time("Tue",20,21),1),
+Shift(5,tTime("Tue",18,19),1),
+Shift(6,tTime("Tue",19,20),1),
+Shift(7,tTime("Tue",20,21),1),
 
-Shift(8,Time("Tue",22,23),1),
+Shift(8,tTime("Tue",22,23),1),
 
-Shift(9,Time("Wed",18,19),1),
-Shift(10,Time("Wed",19,20),1),
+Shift(9,tTime("Wed",18,19),1),
+Shift(10,tTime("Wed",19,20),1),
 
-Shift(11,Time("Wed",21,22),1),
-Shift(12,Time("Wed",22,23),1),
+Shift(11,tTime("Wed",21,22),1),
+Shift(12,tTime("Wed",22,23),1),
 
-Shift(13,Time("Thu",18,19),1),
+Shift(13,tTime("Thu",18,19),1),
 
-Shift(14,Time("Thu",20,21),1),
-Shift(15,Time("Thu",21,22),1),
-Shift(16,Time("Thu",22,23),1)
+Shift(14,tTime("Thu",20,21),1),
+Shift(15,tTime("Thu",21,22),1),
+Shift(16,tTime("Thu",22,23),1)
 ] """
 
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
+def get_start_day(t):
+    r = int(t.start / 24)
+    return r
+
+def get_end_day(t):
+    r = int(t.end / 24)
+    return r
+
 def collision(x,y):
-    if(x.day != y.day):
-        return(False)
     if(x.end <= y.start):
         return(False)
     if(x.start >= y.end):
@@ -282,8 +287,6 @@ def collision(x,y):
     return(True)
 
 def in_time(x,y):  # check if x is in y
-    if(x.day != y.day):
-        return(False)
     if(x.start < y.start):
         return(False)
     if(x.end > y.end):
@@ -306,9 +309,7 @@ def get_index(employee,shift,number_of_shifts):
     return(employee*number_of_shifts+shift)
 
 def is_continious(t1,t2):
-    if(t1.day!=t2.day):
-        return False
-    elif(t1.end >= t2.start - yet_count_as_continous):
+    if(t1.end >= t2.start - yet_count_as_continous):
         return True
     return False
 
@@ -343,7 +344,7 @@ for ideal_shift_time in ideal_shift_times:
             for i in range(ideal_shift_time[0]-1):
                 id += str(shifts[s+i].id) + "-"
             id+=str(shifts[s + ideal_shift_time[0] - 1].id)
-            new_shift = Shift(id,Time(shifts[s].time.day,shifts[s].time.start,shifts[s+ideal_shift_time[0]-1].time.end),1)
+            new_shift = Shift(id,Time(shifts[s].time.start,shifts[s+ideal_shift_time[0]-1].time.end),1)
             new_shift.priority = ideal_shift_time[1]  # preferred job
             shifts.append(new_shift) 
             new_eq = [s,ideal_shift_time[0],len(shifts) - 1]  # triplet of the start, length and new location.
@@ -368,7 +369,7 @@ lp_prob_int = pulp.LpProblem("schedule_int", pulp.LpMaximize)
 
 for d in days:  # the shifts should be on full hours.
     for h in range(hours_in_day):
-        t = Time(d,h,h+1)
+        t = tTime(d,h,h+1)
         l = []
         for s in range(number_of_shifts):
             if (collision(t,shifts[s].time)):
@@ -438,7 +439,7 @@ for e in range(number_of_employees):
         nc_cont = []
         
         for s in range(number_of_shifts):
-            if(shifts[s].time.day == days[d]):
+            if(get_day(shifts[s].time) == days[d]):
                 nc_int.append((variables_int[get_index(e,s,number_of_shifts)],1))
                 nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],1))
         lp_prob_int += pulp.LpAffineExpression(nc_int) <= 1
@@ -483,7 +484,7 @@ for e in range(number_of_employees):
         nc_cont = []
         
         for s in range(number_of_shifts):
-            if(shifts[s].time.day == days[d]):
+            if(get_start_day(shifts[s].time) == day_to_num(days[d]) or get_end_day(shifts[s].time) == day_to_num(days[d])):  # TODO : make it work for half a shift of time (the shift may continue to next day)
                 nc_int.append((variables_int[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))
                 nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))        
         lp_prob_int += pulp.LpAffineExpression(nc_int) <= employees[e].max_day[d]

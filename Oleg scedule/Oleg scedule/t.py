@@ -367,8 +367,8 @@ lp_prob_int = pulp.LpProblem("schedule_int", pulp.LpMaximize)
 # i * number_of_shifts)+j
 
 for d in days:  # the shifts should be on full hours.
-    for h in range(hours_in_day):
-        t = Time(d,h,h+1)
+    for h in range(hours_in_day * 12):
+        t = Time(d,h/12,(h+1)/12)
         l = []
         for s in range(number_of_shifts):
             if (collision(t,shifts[s].time)):
