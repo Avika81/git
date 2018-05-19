@@ -29,9 +29,9 @@ def day_to_num(day):
 class Time:
     start = 0
     end = 0
-    def __init__(self, start, end, day = ""):
-        self.start = day_to_num(day)*24 + start
-        self.end = day_to_num(day)*24 + end
+    def __init__(self, start, end, day=""):
+        self.start = day_to_num(day) * 24 + start
+        self.end = day_to_num(day) * 24 + end
     def __eq__(self,other):
         return self.start == other.start
     def __lt__(self,other):
@@ -47,7 +47,7 @@ class Employee:
     jobs = []
     max_day = []
     max_week = 0
-    def __init__(self, id, name, availability, jobs, max_day = [4,4,4,4,4,4,4], max_week = 20):
+    def __init__(self, id, name, availability, jobs, max_day=[4,4,4,4,4,4,4], max_week=20):
         self.id = id
         self.name = name
         self.availability = availability
@@ -113,11 +113,9 @@ tTime("Wed",15,18),
 tTime("Thu",16.5,24),
 tTime("Fri",13,24),
 tTime("Sat",10,24)],
-[1,2,3,4])
-]
+[1,2,3,4])]
 """ test 1: BB """
-shifts = [ 
-Shift(0,tTime("Sun",12,13),1),
+shifts = [Shift(0,tTime("Sun",12,13),1),
 Shift(1,tTime("Sun",13,14),1),
 Shift(2,tTime("Sun",14,15),1),
 Shift(3,tTime("Sun",15,16),1),
@@ -149,8 +147,7 @@ Shift(24,tTime("Thu",18,19),1),
 Shift(25,tTime("Thu",19,20),1),
 Shift(26,tTime("Thu",20,21),1),
 Shift(27,tTime("Thu",21,22),1),
-Shift(28,tTime("Thu",22,23),1)
-]
+Shift(28,tTime("Thu",22,23),1)]
 
 """ test 2: FFB 
 shifts = [ 
@@ -271,6 +268,19 @@ Shift(16,tTime("Thu",22,23),1)
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
+
+def time_in_day(t,d):
+    d_int = day_to_num(d)
+    start_h = t.start - d_int * hours_in_day
+    if(get_end_day(t) > d_int):  # the next day
+        res = hours_in_day - start_h
+    else:
+        res = t.end - t.start
+    return(max(res,0))
+
+def time_in_week(t):  # TODO: change if there is more than one week
+    return(t.end - t.start)
+
 def get_start_day(t):
     r = int(t.start / 24)
     return r
@@ -301,12 +311,8 @@ def could_do_this_job(s,e): #shift,start time,employee
             return(True)
     return(False)
 
-def total_time(t):
-    res = t.end - t.start
-    return res
-
 def get_index(employee,shift,number_of_shifts):
-    return(employee*number_of_shifts+shift)
+    return(employee * number_of_shifts + shift)
 
 def is_continious(t1,t2):
     if(t1.end >= t2.start - yet_count_as_continous):
@@ -328,23 +334,24 @@ def get_name_of_employee_from_var_name(name,number_of_shifts):
 def get_variable_index_from_var_name(name,number_of_shifts):
     str = name[2:]
     return int(str)
+
 preffered_eq = []   
 #create preferred shifts:
 shifts.sort()
 
 for ideal_shift_time in ideal_shift_times:
-    s=0
+    s = 0
     while(s <= number_of_shifts - ideal_shift_time[0]):
-        b = True;
-        for i in range(ideal_shift_time[0]-1):
-            if(not is_continious(shifts[s+i].time,shifts[s+i+1].time)):
+        b = True
+        for i in range(ideal_shift_time[0] - 1):
+            if(not is_continious(shifts[s + i].time,shifts[s + i + 1].time)):
                 b = False
         if b:
             id = ""
-            for i in range(ideal_shift_time[0]-1):
-                id += str(shifts[s+i].id) + "-"
+            for i in range(ideal_shift_time[0] - 1):
+                id += str(shifts[s + i].id) + "-"
             id+=str(shifts[s + ideal_shift_time[0] - 1].id)
-            new_shift = Shift(id,Time(shifts[s].time.start,shifts[s+ideal_shift_time[0]-1].time.end),1)
+            new_shift = Shift(id,Time(shifts[s].time.start,shifts[s + ideal_shift_time[0] - 1].time.end),1)
             new_shift.priority = ideal_shift_time[1]  # preferred job
             shifts.append(new_shift) 
             new_eq = [s,ideal_shift_time[0],len(shifts) - 1]  # triplet of the start, length and new location.
@@ -366,10 +373,9 @@ variables_int = pulp.LpVariable.dicts("y",range(number_variables),   0, 1,cat="I
 lp_prob_int = pulp.LpProblem("schedule_int", pulp.LpMaximize)
 # variables are : 0 - shifts-1 those for employee1, and so on.  to get xij, do
 # i * number_of_shifts)+j
-
 for d in days:  # the shifts should be on full hours.
     for h in range(hours_in_day):
-        t = tTime(d,h,h+1)
+        t = tTime(d,h,h + 1)
         l = []
         for s in range(number_of_shifts):
             if (collision(t,shifts[s].time)):
@@ -439,12 +445,11 @@ for e in range(number_of_employees):
         nc_cont = []
         
         for s in range(number_of_shifts):
-            if(get_day(shifts[s].time) == days[d]):
+            if(get_start_day(shifts[s].time) == days[d]):
                 nc_int.append((variables_int[get_index(e,s,number_of_shifts)],1))
                 nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],1))
         lp_prob_int += pulp.LpAffineExpression(nc_int) <= 1
         lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= 1
-
 
 #shifts constraints:
 for s in range(number_of_shifts):
@@ -473,10 +478,11 @@ for e in range(number_of_employees):
     nc_cont = []
     
     for s in range(number_of_shifts):
-        nc_int.append((variables_int[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))
-        nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))
+        nc_int.append((variables_int[get_index(e,s,number_of_shifts)],time_in_week(shifts[s].time)))
+        nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],time_in_week(shifts[s].time)))
     lp_prob_int += pulp.LpAffineExpression(nc_int) <= employees[e].max_week
     lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= employees[e].max_week
+
 #day constraints:
 for e in range(number_of_employees):
     for d in range(len(days)):
@@ -484,9 +490,10 @@ for e in range(number_of_employees):
         nc_cont = []
         
         for s in range(number_of_shifts):
-            if(get_start_day(shifts[s].time) == day_to_num(days[d]) or get_end_day(shifts[s].time) == day_to_num(days[d])):  # TODO : make it work for half a shift of time (the shift may continue to next day)
-                nc_int.append((variables_int[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))
-                nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],total_time(shifts[s].time)))        
+            if(get_start_day(shifts[s].time) == day_to_num(days[d]) or get_end_day(shifts[s].time) == day_to_num(days[d])):  # TODO : make it work for half a shift of time (the shift may continue to
+                                                                                                                             # next day)
+                nc_int.append((variables_int[get_index(e,s,number_of_shifts)],time_in_day(shifts[s].time,days[d])))
+                nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],time_in_day(shifts[s].time,days[d])))        
         lp_prob_int += pulp.LpAffineExpression(nc_int) <= employees[e].max_day[d]
         lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= employees[e].max_day[d]
        
@@ -566,7 +573,7 @@ else:
         else:
             output = "shift " + str(get_shift_id_from_var_name(v.name,number_of_shifts,shifts)) + ": "
             output += get_name_of_employee_from_var_name(v.name,number_of_shifts)
-            if(debug_var) : output += "\tvar: " + str(v.name) +"-"+ str(v.varValue)
+            if(debug_var) : output += "\tvar: " + str(v.name) + "-" + str(v.varValue)
             print(output)
 print("int : " + str(pulp.value(lp_prob_int.objective)))
 
