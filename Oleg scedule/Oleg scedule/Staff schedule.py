@@ -577,21 +577,3 @@ else:
             print(output)
 print("int : " + str(pulp.value(lp_prob_int.objective)))
 
-"""
-if pulp.LpStatus[lp_prob.status] != "Optimal":
-    print("error the problem is: " + pulp.LpStatus[lp_prob.status])
-else:
-    res = lp_prob.variables()
-    if(debug):
-        for i in range(len(res)):
-            print("{} = {}".format(lp_prob.variables()[i].name, lp_prob.variables()[i].varValue))
-    for v in res:
-        if(v.varValue == 0):
-            continue
-        else:
-            output = "shift " + str(get_shift_id_from_var_name(v.name,number_of_shifts,shifts)) + ": "
-            output += get_name_of_employee_from_var_name(v.name,number_of_shifts)
-            if(debug) : output += "\tvar: " + str(v.name) +"-"+ str(v.varValue)
-            print(output)
-print(pulp.value(lp_prob.objective))"""
-
