@@ -25,6 +25,9 @@
     <Compile Include="Employee schedule.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="forAvi.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="lin_prog_sol.py">
       <SubType>Code</SubType>
     </Compile>
