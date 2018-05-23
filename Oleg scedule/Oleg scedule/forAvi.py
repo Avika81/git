@@ -13,6 +13,8 @@ import numpy as np
 import random
 import pulp
 
+we_love_avi = False
+d = False
 debug = False
 debug2 = False
 debug3 = False
@@ -23,7 +25,8 @@ days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
 hours_in_day = 24
 
 def day_to_num(day):
-    if day == "Sun": return 1
+    if   day == ""   : return 0
+    elif day == "Sun": return 1
     elif day == "Mon": return 2
     elif day == "Tue": return 3
     elif day == "Wed": return 4
@@ -32,22 +35,17 @@ def day_to_num(day):
     elif day == "Sat": return 7
 
 class Time:
-    day = ""
     start = 0
     end = 0
-    def __init__(self, day,start,end):
-        self.day = day
-        self.start = start
-        self.end = end
+    def __init__(self, start, end, day=""):
+        self.start = day_to_num(day) * 24 + start
+        self.end = day_to_num(day) * 24 + end
     def __eq__(self,other):
-        if(self.day != other.day):
-            return False
         return self.start == other.start
     def __lt__(self,other):
-        if(self.day!=other.day):
-            return day_to_num(self.day)<day_to_num(other.day)
         return self.start < other.start
-
+def tTime(day,start,end):
+    return Time(start,end,day)
 class Employee:
     id = 0
     name = ""
@@ -55,7 +53,8 @@ class Employee:
     jobs = []
     max_day = []
     max_week = 0
-    def __init__(self, id, name, availability, jobs, max_day = [4,4,4,4,4,4,4], max_week = 20):
+    number_tokens = 10
+    def __init__(self, id, name, availability, jobs, max_day = [4,4,4,4,4,4,4], max_week = 20, number_tokens = 10):
         self.id = id
         self.name = name
         self.availability = availability
@@ -65,7 +64,7 @@ class Employee:
 
 class Shift:
     id = 0
-    #time = Time("",0,0)
+    # time = Time(0,0,"")
     time = []
     job_id = 0
     number_employees_needed = 1
@@ -127,8 +126,6 @@ def time_in_day(t,d):
     return(max(res,0))
 
 def collision(x,y):
-    if(x.day != y.day):
-        return(False)
     if(x.end <= y.start):
         return(False)
     if(x.start >= y.end):
@@ -136,8 +133,6 @@ def collision(x,y):
     return(True)
 
 def in_time(x,y):  # check if x is in y
-    if(x.day != y.day):
-        return(False)
     if(x.start < y.start):
         return(False)
     if(x.end > y.end):
@@ -152,7 +147,7 @@ def could_do_this_job(s,e): #shift,start time,employee
     if(s.job_id not in e.jobs): #in array check employee tru and false
         return(False)
     for t in e.availability:
-        if in_time(s.time, t):
+        if in_time(s.time, t[0]):
             return(True)
     return(False)
 
@@ -163,12 +158,6 @@ def total_time(t):
 def get_index(employee,shift,number_of_shifts):
     return(employee*number_of_shifts+shift)
 
-#def is_continious(t1,t2):
-#    if(t1.day!=t2.day):
-#        return False
-#    elif(t1.end == t2.start):
-#        return True
-#    return False
 def is_continious(t1,t2):
     if(t1.end >= t2.start - yet_count_as_continous):
         return True
@@ -195,6 +184,34 @@ def get_id_of_employee_from_var_name(name,number_of_shifts):
 def get_variable_index_from_var_name(name,number_of_shifts):
     str = name[2:]
     return int(str)
+
+def normalize_pref(employees,shifts):
+    for s in shifts:
+        t = Time(s.time[0],s.time[1])
+        s.time = t
+
+    for e in employees:
+        s = 0
+        for i in range(len(e.availability)):
+            p = [Time(e.availability[i][0],e.availability[i][1]),e.availability[i][2]]
+            e.availability[i] = p
+            s+=p[1]    # sum of all the preferences.
+        if s == 0 : #there are no preffered so it is same as all pref.
+            for p in e.availability:
+                p[1] = 1
+                s+=p[1]    # sum of all the preferences.
+
+        for p in e.availability:
+            if p[1] == 0:
+                p[1] = 1
+            else: # p[1] == 1
+                p[1] = 1 + 1 / s * e.number_tokens
+
+normalize_pref(employees,shifts) #change to the format I like :)
+
+if(d): 
+    for s in shifts:
+      print(s.time)
 
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
@@ -312,8 +329,8 @@ else:
             ne.append((variables_int[index],1))
             lp_prob_int += pulp.LpAffineExpression(ne) == 0 # we know it's value for sure. (0)
         
-
-cont_res = print("cont : " + str(pulp.value(lp_prob_cont.objective)))
+cont_res = pulp.value(lp_prob_cont.objective)  # TODO : if the algorithm has too many errors add constraints to get more linear result in continous prob.
+if(we_love_avi): print("cont : " + str(pulp.value(lp_prob_cont.objective)))
 
 lp_prob_int.solve()
 output='['

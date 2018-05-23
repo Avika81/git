@@ -1,21 +1,29 @@
-# from pylinprogmaster import linprog
+#!/usr/bin/env python
+# encoding: utf-8
+
+import tornado.ioloop
+import tornado.web
+import tornado.autoreload
+from tornado.options import options, parse_command_line, parse_config_file
+import logging
+import json
+
+from pylinprogmaster import linprog
 import numpy as np
 import random
 import pulp
 
+we_love_avi = False
 d = False
 debug = False
 debug2 = False
 debug3 = False
-debug_var = False
 epsilon_1 = 0.01
-epsilon_2 = 0.01
-
-hours_in_day = 24
 max_shift_time = 12.0
-yet_count_as_continous = 1  # the legnth of maximal break
+ideal_shift_time = 3
 days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
-    
+hours_in_day = 24
+
 def day_to_num(day):
     if   day == ""   : return 0
     elif day == "Sun": return 1
@@ -36,19 +44,17 @@ class Time:
         return self.start == other.start
     def __lt__(self,other):
         return self.start < other.start
-
 def tTime(day,start,end):
-    return(Time(start,end,day))
-
+    return Time(start,end,day)
 class Employee:
     id = 0
     name = ""
-    number_of_tokens = 0
-    availability = [[]] # list of pairs : (time, pref)
+    availability = [[]]
     jobs = []
     max_day = []
     max_week = 0
-    def __init__(self, id, name, availability, jobs, max_day=[4,4,4,4,4,4,4], max_week=20):
+    number_tokens = 10
+    def __init__(self, id, name, availability, jobs, max_day = [4,4,4,4,4,4,4], max_week = 20, number_tokens = 10):
         self.id = id
         self.name = name
         self.availability = availability
@@ -56,246 +62,48 @@ class Employee:
         self.max_day = max_day
         self.max_week = max_week
 
-def __repr__(self):
-    return "<__main__.Employee: id = " + str(self.id) + "; name = " + str(self.name) + ";>"
-
 class Shift:
     id = 0
-    time = Time(0,0)
+    # time = Time(0,0,"")
+    time = []
     job_id = 0
     number_employees_needed = 1
     priority = 1
-    def __init__(self,id, time, job_id):
+    availableEmployees = []
+    def __init__(self,id, time, job_id): #availableEmployees):
         self.id = id
         self.time = time
         self.job_id = job_id
+        #self.availableEmployees = availableEmployees
         self.number_employees_needed = 1
     def __eq__(self,other):
         return self.time == other.time
     def __lt__(self,other):
         return self.time < other.time
 
-    #like server loads json string
-datas = '{"params":{"shifts":[{"id":46062,"time":["Sun",10,13],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46063,"time":["Sun",13,16],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46064,"time":["Sun",16,20],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46065,"time":["Sun",20,23.5],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46080,"time":["Sun",10,13.5],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46081,"time":["Sun",13.5,17],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46082,"time":["Sun",17,20.5],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46083,"time":["Sun",20.5,23.5],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46066,"time":["Mon",17,20.5],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46067,"time":["Mon",20.5,23.5],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46084,"time":["Mon",6,9],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46089,"time":["Mon",9,12],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46094,"time":["Mon",12,15],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46099,"time":["Mon",15,18],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46104,"time":["Mon",18,21],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46109,"time":["Mon",21,23.5],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46068,"time":["Tue",20.5,23.5],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46071,"time":["Tue",17,20.5],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46085,"time":["Tue",6,9],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46090,"time":["Tue",9,12],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46095,"time":["Tue",12,15],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46100,"time":["Tue",15,18],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46105,"time":["Tue",18,21],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46110,"time":["Tue",21,23.5],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46069,"time":["Wed",20.5,23.5],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46072,"time":["Wed",17,20.5],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46086,"time":["Wed",6,9],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46091,"time":["Wed",9,12],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46096,"time":["Wed",12,15],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46101,"time":["Wed",15,18],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46106,"time":["Wed",18,21],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46111,"time":["Wed",21,23.5],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46070,"time":["Thu",20.5,23.5],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46073,"time":["Thu",17,20.5],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46087,"time":["Thu",6,9],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46092,"time":["Thu",9,12],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46097,"time":["Thu",12,15],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46102,"time":["Thu",15,18],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46107,"time":["Thu",18,21],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46112,"time":["Thu",21,23.5],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46074,"time":["Fri",17,20.5],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46075,"time":["Fri",20.5,23.5],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46088,"time":["Fri",6,9],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46093,"time":["Fri",9,12],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46098,"time":["Fri",12,15],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46103,"time":["Fri",15,18],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46108,"time":["Fri",18,21],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46113,"time":["Fri",21,23.5],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46076,"time":["Sat",10,13],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46077,"time":["Sat",13,16],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46078,"time":["Sat",16,19],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46079,"time":["Sat",19,22],"jobId":17,"availableEmployees":[126,141,143,146,148,152,160,163,166,170,178,182,186,358,739,1341]},{"id":46114,"time":["Sat",10,13.5],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46115,"time":["Sat",13.5,17],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46116,"time":["Sat",17,20.5],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]},{"id":46117,"time":["Sat",20.5,23.5],"jobId":16,"availableEmployees":[117,126,134,137,141,143,146,148,152,160,163,166,167,170,178,180,182,184,186,358,739,1297,1341,1472,1475,1476,1570,1652,1669]}],"employees":[{"id":126,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":141,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":143,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":146,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":148,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":152,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":160,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":163,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":166,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":170,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":178,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":182,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":186,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":358,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":739,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":1341,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":117,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":134,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":137,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":167,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":180,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":184,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":1297,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":1472,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":1475,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":1476,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":1570,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":1652,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20},{"id":1669,"availability":[["Sun",0,24],["Mon",0,24],["Tue",0,24],["Wed",0,24],["Thu",0,24],["Fri",0,24],["Sat",0,24]],"maxDayTime":[24,24,24,24,24,24,24],"maxWeekTime":20}]}}'
-data = json.loads(datas) 
-shifts = []
+
+# Shift time in new range format - [0, 168]
+# Employee time in new range format - [0, 10, 0] - sunday from 00.00 = 10.00 avaible
+# Employee time in new range format - [25, 30, 1] - monday from 01.00 = 05.00 preferred
+# jobsid in input be like before list -  [1,23,4] but for now i hardcoded in creating employee cycle
+example = '{"params":{"shifts":[{"id":46124,"time":[166,168],"jobId":4},{"id":46128,"time":[50,53],"jobId":4},{"id":44309,"time":[21.5,24],"jobId":7}],"employees":[{"id":384,"availability":[[0,87,0],[88,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,74,75,77]},{"id":110,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,7,8,9,10,11,12]},{"id":1501,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,8,9,10,11,12,73,74,75]},{"id":70,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,4]},{"id":111,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,74,77]},{"id":89,"availability":[[24,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,4,5,7,8,9,10,11,12,74,75,77]},{"id":1340,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,72,73,77]},{"id":86,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,8,9,10,11,12]},{"id":113,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,8,9,10,11,12,79]},{"id":107,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,8,9,10,11,12,72,73,74,75]},{"id":71,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,72,79]},{"id":371,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,72,79]},{"id":88,"availability":[[0,33,0],[37,57,0],[58.5,81,0],[85,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,7,8,9,10,11,12]},{"id":1677,"availability":[[0,6,0],[6,22.5,1],[22.5,61,0],[61,71,1],[71,129,0],[129,131.5,1],[131.5,133,0],[133,143,1],[143,150,0],[150,167,1],[167,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,9,11,12]},{"id":90,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,73]},{"id":104,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,74,75]},{"id":101,"availability":[[0,12,0],[22.5,34.5,0],[45.5,60,0],[66.5,82,0],[93.5,108,0],[114.5,129,0],[142,153,0],[164.5,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,8,9,10,11,12]},{"id":1767,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,4]},{"id":1496,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,7,8,9,10,11,12]},{"id":1562,"availability":[[0,32,0],[32,36,1],[36,56,0],[56,60,1],[60,80,0],[80,84,1],[84,104,0],[104,108,1],[108,128,0],[128,132,1],[132,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,4]},{"id":98,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,7,8,9,10,11,12]},{"id":361,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,72,73,74,75]},{"id":359,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,7,8,9,10,11,12,72,73,74,75,77]},{"id":1513,"availability":[[0,0,1],[24,32,0],[37.25,56,0],[64.5,80,0],[85,89.25,0],[96,104,0],[109,113.25,0],[144,168,1]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,74]},{"id":1507,"availability":[[0,10,0],[13,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12]},{"id":347,"availability":[[0,89,0],[93.5,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,7,8,9,10,11,12,74,75]},{"id":102,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,7,8,9,10,11,12,74,75,77]},{"id":366,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,7,8,9,10,11,12,72,73,74]},{"id":73,"availability":[[0,33,0],[33.92,59,0],[60.5,81,0],[81.92,107,0],[108.5,129,0],[129.92,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,7,8,9,10,11,12]},{"id":1561,"availability":[[0,0.5,0],[0.5,3.5,1],[10,36,0],[36,41,1],[41,144,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,4]}]}}'
+data = json.loads(example) 
+days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+#print(data)
+shifts=[];
 #setup shifts from data
 for sh in range(len(data['params']['shifts'])): 
-    shifts.append(Shift(data['params']['shifts'][sh]['id'], Time(data['params']['shifts'][sh]['time'][0],data['params']['shifts'][sh]['time'][1],data['params']['shifts'][sh]['time'][2]), data['params']['shifts'][sh]['jobId'], data['params']['shifts'][sh]['availableEmployees']))
+    shifts.append(Shift(data['params']['shifts'][sh]['id'], data['params']['shifts'][sh]['time'], data['params']['shifts'][sh]['jobId']))
 
 #setup employees from data
-employees = []
+employees=[]
 for emp in range(len(data['params']['employees'])): 
-    tempavailability = []
+    #tempavailability=[]
     
-    for index in range(len(data['params']['employees'][emp]['availability'])): 
-        tempavailability.append(Time(data['params']['employees'][emp]['availability'][index][0],data['params']['employees'][emp]['availability'][index][1],data['params']['employees'][emp]['availability'][index][2]))
-#id, name, availability, jobs, max_day, max_week = 20
-    employees.append(Employee(data['params']['employees'][emp]['id'], 'EmployeeName', tempavailability, [], data['params']['employees'][emp]['maxDayTime'], int(data['params']['employees'][emp]['maxWeekTime'])))
-
-'''
-employees = [Employee(1,"Bill",
-[tTime("Sun",8.5,24),
- tTime("Sun",14,24),
-tTime("Mon",15,24),
-tTime("Tue",16.5,24),
-tTime("Wed",3,24),
-tTime("Thu",16.5,24),
-tTime("Fri",13,24),
-tTime("Sat",10,24)],
-[1,2,3,4]),
-
-Employee(2,"Jenny",
-[tTime("Sun",8.5,24),
-tTime("Mon",12,24),
-tTime("Tue",12,24),
-tTime("Wed",12,18),
-tTime("Wed",21,24),
-tTime("Thu",12,24),
-tTime("Fri",12,24),
-tTime("Sat",8.5,24)],
-[1,2,3,4]),
-
-Employee(3,"Tom",
-[tTime("Sun",12,24),
-tTime("Mon",15,24),
-tTime("Tue",15,24),
-tTime("Wed",15,24),
-tTime("Thu",15,24),
-tTime("Fri",13,18)],
-[1,2,3,4]),
-
-Employee(4,"Amy",
-[tTime("Sun",8.5,24),
-tTime("Sun",14,24),
-tTime("Mon",15,24),
-tTime("Tue",16.5,24),
-tTime("Wed",15,18),
-tTime("Thu",16.5,24),
-tTime("Fri",13,24),
-tTime("Sat",10,24)],
-[1,2,3,4])]
-""" test 1: BB """
-shifts = [Shift(0,tTime("Sun",12,13),1),
-Shift(1,tTime("Sun",13,14),1),
-Shift(2,tTime("Sun",14,15),1),
-Shift(3,tTime("Sun",15,16),1),
-Shift(4,tTime("Sun",16,17),1),
-Shift(5,tTime("Sun",17,18),1),
-Shift(6,tTime("Sun",18,19),1),
-Shift(7,tTime("Sun",19,20),1),
-Shift(8,tTime("Sun",20,21),1),
-
-Shift(9,tTime("Mon",18,19),1),
-Shift(10,tTime("Mon",19,20),1),
-Shift(11,tTime("Mon",20,21),1),
-Shift(12,tTime("Mon",21,22),1),
-Shift(13,tTime("Mon",22,23),1),
-
-Shift(14,tTime("Tue",18,19),1),
-Shift(15,tTime("Tue",19,20),1),
-Shift(16,tTime("Tue",20,21),1),
-Shift(17,tTime("Tue",21,22),1),
-Shift(18,tTime("Tue",22,23),1),
-
-Shift(19,tTime("Wed",18,19),1),
-Shift(20,tTime("Wed",19,20),1),
-Shift(21,tTime("Wed",20,21),1),
-Shift(22,tTime("Wed",21,22),1),
-Shift(23,tTime("Wed",22,23),1),
-
-Shift(24,tTime("Thu",18,19),1),
-Shift(25,tTime("Thu",19,20),1),
-Shift(26,tTime("Thu",20,21),1),
-Shift(27,tTime("Thu",21,22),1),
-Shift(28,tTime("Thu",22,23),1)]
-
-""" test 2: FFB 
-shifts = [ 
-Shift(0,tTime("Sun",10.5,11.5),1),
-Shift(1,tTime("Sun",11.5,12.5),1),
-Shift(2,tTime("Sun",12.5,13.5),1),
-Shift(3,tTime("Sun",13.5,14.5),1),
-Shift(4,tTime("Sun",14.5,15.5),1),
-Shift(5,tTime("Sun",15.5,16.5),1),
-Shift(6,tTime("Mon",15.5,16.5),1),
-Shift(7,tTime("Tue",15.5,16.5),1),
-Shift(8,tTime("Wed",15.5,16.5),1),
-Shift(9,tTime("Thu",15.5,16.5),1),
-Shift(10,tTime("Fri",15.5,16.5),1)
-]
-
- test 3: VB 
-shifts = [ 
-Shift(1,tTime("Mon",19,20),1),
-Shift(2,tTime("Mon",20,21),1),
-Shift(3,tTime("Mon",21,22),1),
-Shift(4,tTime("Tue",19,20),1),
-Shift(5,tTime("Tue",20,21),1),
-Shift(6,tTime("Tue",21,22),1),
-Shift(7,tTime("Wed",19,20),1),
-Shift(8,tTime("Wed",20,21),1),
-Shift(9,tTime("Wed",21,22),1),
-Shift(10,tTime("Thu",19,20),1),
-Shift(11,tTime("Thu",20,21),1),
-Shift(12,tTime("Thu",21,22),1)
-] 
-
- test 4: Soc 
-shifts = [ 
-Shift(0,tTime("Sun",13,14),1),
-Shift(1,tTime("Sun",14,15),1),
-Shift(2,tTime("Sun",15,16),1),
-Shift(3,tTime("Sun",16,17),1),
-Shift(4,tTime("Sun",17,18),1),
-Shift(5,tTime("Sun",18,19),1),
-
-Shift(6,tTime("Mon",16,17),1),
-Shift(7,tTime("Mon",17,18),1),
-Shift(8,tTime("Mon",18,19),1),
-
-Shift(9,tTime("Tue",16,17),1),
-Shift(10,tTime("Tue",17,18),1),
-Shift(11,tTime("Tue",18,19),1),
-
-
-Shift(12,tTime("Wed",16,17),1),
-Shift(13,tTime("Wed",17,18),1),
-Shift(14,tTime("Wed",18,19),1),
-
-
-Shift(15,tTime("Thu",16,17),1),
-Shift(16,tTime("Thu",17,18),1),
-Shift(17,tTime("Thu",18,19),1),
-
-
-Shift(18,tTime("Fri",16,17),1),
-Shift(19,tTime("Fri",17,18),1),
-Shift(20,tTime("Fri",18,19),1)
-] 
-
- test 5: Soft 
-shifts = [ 
-Shift(1,tTime("Mon",17,18.5),1),
-Shift(2,tTime("Mon",18.5,20),1),
-
-Shift(3,tTime("Tue",17,18.5),1),
-Shift(4,tTime("Tue",18.5,20),1),
-
-Shift(5,tTime("Wed",17,18.5),1),
-Shift(6,tTime("Wed",18.5,20),1),
-
-Shift(7,tTime("Thu",17,18.5),1),
-Shift(8,tTime("Thu",18.5,20),1),
-
-Shift(9,tTime("Fri",17,18.5),1),
-Shift(10,tTime("Fri",18.5,20),1),
-
-Shift(11,tTime("Sat",12.5,14),1),
-Shift(12,tTime("Sat",14,15.5),1),
-Shift(13,tTime("Sat",15.5,17),1),
-Shift(14,tTime("Sat",17,18.5),1),
-Shift(15,tTime("Sat",18.5,20),1),
-Shift(16,tTime("Sat",18.5,20),1),
-]
-
- test 6: WP 
-shifts = [ 
-Shift(1,tTime("Mon",18,19),1),
-Shift(2,tTime("Mon",19,20),1),
-
-Shift(3,tTime("Mon",21,22),1),
-Shift(4,tTime("Mon",22,23),1),
-
-Shift(5,tTime("Tue",18,19),1),
-Shift(6,tTime("Tue",19,20),1),
-Shift(7,tTime("Tue",20,21),1),
-
-Shift(8,tTime("Tue",22,23),1),
-
-Shift(9,tTime("Wed",18,19),1),
-Shift(10,tTime("Wed",19,20),1),
-
-Shift(11,tTime("Wed",21,22),1),
-Shift(12,tTime("Wed",22,23),1),
-
-Shift(13,tTime("Thu",18,19),1),
-
-Shift(14,tTime("Thu",20,21),1),
-Shift(15,tTime("Thu",21,22),1),
-Shift(16,tTime("Thu",22,23),1)
-] """
-'''
-
-
-def time_in_day(t,d):
-    d_int = day_to_num(d)
-    start_h = t.start - d_int * hours_in_day
-    if(get_end_day(t) > d_int):  # the next day
-        res = hours_in_day - start_h
-    else:
-        res = t.end - t.start
-    return(max(res,0))
+    #for index in range(len(data['params']['employees'][emp]['availability'])): 
+        #tempavailability.append(Time(data['params']['employees'][emp]['availability'][index][0],data['params']['employees'][emp]['availability'][index][1],data['params']['employees'][emp]['availability'][index][2]))
+                     #id,                                              name,          availability,    jobs, max_day,                                        max_week = 20
+    employees.append(Employee(data['params']['employees'][emp]['id'], 'EmployeeName', data['params']['employees'][emp]['availability'], data['params']['employees'][emp]['jobIds'], data['params']['employees'][emp]['maxDayTime'], int(data['params']['employees'][emp]['maxWeekTime'])))
 
 def time_in_week(t):  # TODO: change if there is more than one week
     return(t.end - t.start)
@@ -307,6 +115,15 @@ def get_start_day(t):
 def get_end_day(t):
     r = int(t.end / 24)
     return r
+
+def time_in_day(t,d):
+    d_int = day_to_num(d)
+    start_h = t.start - d_int * hours_in_day
+    if(get_end_day(t) > d_int):  # the next day
+        res = hours_in_day - start_h
+    else:
+        res = t.end - t.start
+    return(max(res,0))
 
 def collision(x,y):
     if(x.end <= y.start):
@@ -323,15 +140,23 @@ def in_time(x,y):  # check if x is in y
     return(True)
 
 def could_do_this_job(s,e): #shift,start time,employee
-    if(s.job_id not in e.jobs):
+    #if e.id in s.availableEmployees:
+    #    return(True)
+    #else:
+    #    return(False)
+    if(s.job_id not in e.jobs): #in array check employee tru and false
         return(False)
-    for p in e.availability:
-        if in_time(s.time, p[0]):
+    for t in e.availability:
+        if in_time(s.time, t[0]):
             return(True)
     return(False)
 
+def total_time(t):
+    res = t.end - t.start
+    return res
+
 def get_index(employee,shift,number_of_shifts):
-    return(employee * number_of_shifts + shift)
+    return(employee*number_of_shifts+shift)
 
 def is_continious(t1,t2):
     if(t1.end >= t2.start - yet_count_as_continous):
@@ -350,22 +175,26 @@ def get_name_of_employee_from_var_name(name,number_of_shifts):
     employee = int(int(var_num) / int(number_of_shifts))
     return employees[employee].name
 
+def get_id_of_employee_from_var_name(name,number_of_shifts):
+    str = name[2:]
+    var_num = int(str)
+    employee = int(int(var_num) / int(number_of_shifts))
+    return employees[employee].id
+
 def get_variable_index_from_var_name(name,number_of_shifts):
     str = name[2:]
     return int(str)
 
-def priority_of_employee(e,s,employees):
-    if(s.job_id not in e.jobs):
-        return 0
-    else:
-        for p in e.availability:  # in each there is (time, pref) [ pref is 0 or 1 ]
-            if(in_time(s.time,p[0])):
-                return p[1]
+def normalize_pref(employees,shifts):
+    for s in shifts:
+        t = Time(s.time[0],s.time[1])
+        s.time = t
 
-def normalize_pref(employees):
     for e in employees:
         s = 0
-        for p in e.availability:
+        for i in range(len(e.availability)):
+            p = [Time(e.availability[i][0],e.availability[i][1]),e.availability[i][2]]
+            e.availability[i] = p
             s+=p[1]    # sum of all the preferences.
         if s == 0 : #there are no preffered so it is same as all pref.
             for p in e.availability:
@@ -378,15 +207,14 @@ def normalize_pref(employees):
             else: # p[1] == 1
                 p[1] = 1 + 1 / s * e.number_tokens
 
-#making the data neat:
-shifts.sort()
-normalize_pref(employees)
+normalize_pref(employees,shifts) #change to the format I like :)
+
+if(d): 
+    for s in shifts:
+      print(s.time)
+
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
-
-if(debug2): 
-    for s in shifts:
-        print(s.id)
 
 number_variables = number_of_shifts * number_of_employees 
 
@@ -403,12 +231,12 @@ for s in range(number_of_shifts):
     new_line = np.zeros(number_variables)
     nc_int = []
     nc_cont = []
-    
+
     for e in range(number_of_employees):
         if(could_do_this_job(shifts[s], employees[e])):  # the employee can do it?
             nc_int.append((variables_int[get_index(e,s,number_of_shifts)],1))
             nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],1))
-            
+    
         else:  # should kill this variable: (so adding the constaint of xij==0
             nl_int = []
             nl_cont = []
@@ -423,7 +251,7 @@ for s in range(number_of_shifts):
 for e in range(number_of_employees):
     nc_int = []
     nc_cont = []
-    
+
     for s in range(number_of_shifts):
         nc_int.append((variables_int[get_index(e,s,number_of_shifts)],time_in_week(shifts[s].time)))
         nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],time_in_week(shifts[s].time)))
@@ -435,16 +263,15 @@ for e in range(number_of_employees):
     for d in range(len(days)):
         nc_int = []
         nc_cont = []
-        
+
         for s in range(number_of_shifts):
             if(get_start_day(shifts[s].time) == day_to_num(days[d]) or get_end_day(shifts[s].time) == day_to_num(days[d])):  # TODO : make it work for half a shift of time (the shift may continue to
-                                                                                                                             # next
-                                                                                                                                                                                                                                                        # day)
+                                                                                                                             # next day)
                 nc_int.append((variables_int[get_index(e,s,number_of_shifts)],time_in_day(shifts[s].time,days[d])))
                 nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],time_in_day(shifts[s].time,days[d])))        
         lp_prob_int += pulp.LpAffineExpression(nc_int) <= employees[e].max_day[d]
         lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= employees[e].max_day[d]
-       
+
 #check that each employee is only in one place at a time
 for s1 in range(number_of_shifts):
     l_collisions = []
@@ -456,34 +283,29 @@ for s1 in range(number_of_shifts):
     for e in range(number_of_employees):
         nc_int = []
         nc_cont = []
-        
+
         new_line = np.zeros(number_variables)
         nc_int.append((variables_int[get_index(e,s1,number_of_shifts)],1))
         nc_cont.append((variables_cont[get_index(e,s1,number_of_shifts)],1))
-        
+
         for s2 in l_collisions:
             nc_int.append((variables_int[get_index(e,s2,number_of_shifts)],1))
             nc_cont.append((variables_cont[get_index(e,s2,number_of_shifts)],1))
-         
+ 
         lp_prob_int += pulp.LpAffineExpression(nc_int) <= 1
         lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= 1
-       
+
 c_int = []
 c_cont = []
-
 
 for e in range(number_of_employees):
     for s in range(number_of_shifts):
         bonus = np.random.uniform(0,epsilon_1)
-        c_int.append((variables_int[get_index(e,s,number_of_shifts)],shifts[s].priority * priority_of_employee(e,s,employees) + bonus))
+        c_int.append((variables_int[get_index(e,s,number_of_shifts)],shifts[s].priority + bonus))
         c_cont.append((variables_cont[get_index(e,s,number_of_shifts)],shifts[s].priority + bonus))
 
-lp_prob_int += pulp.LpAffineExpression(c_int) , "total_res"
-lp_prob_cont += pulp.LpAffineExpression(c_cont) , "total_res"
-
-if(debug): print(lp_prob_cont)
-if(debug): print("INTTT")
-if(debug): print(lp_prob_int)
+lp_prob_int += pulp.LpAffineExpression(c_int) , "total_res_cont"
+lp_prob_cont += pulp.LpAffineExpression(c_cont) , "total_res_int"
 
 lp_prob_cont.solve()
 
@@ -492,55 +314,42 @@ if pulp.LpStatus[lp_prob_cont.status] != "Optimal":
 
 else:
     res = lp_prob_cont.variables()
-    if(debug3):
-        for i in range(len(res)):
-            print("{} = {}".format(lp_prob_cont.variables()[i].name, lp_prob_cont.variables()[i].varValue))
     for v in res:
         if(debug3):
             if(v.varValue != 1 and v.varValue != 0):
                 print("{} = {}".format(v.name, v.varValue))
-        if(v.varValue == 1 or v.varValue == 0):
+        if(v.varValue == 1):
             ne = []
             index = get_variable_index_from_var_name(v.name,number_of_shifts)
             ne.append((variables_int[index],1))
-            lp_prob_int += pulp.LpAffineExpression(ne) == v.varValue
-
-print("cont : " + str(pulp.value(lp_prob_cont.objective)))
+            lp_prob_int += pulp.LpAffineExpression(ne) == 1 # we know it's value for sure. (1)
+        if(v.varValue == 0):
+            ne = []
+            index = get_variable_index_from_var_name(v.name,number_of_shifts)
+            ne.append((variables_int[index],1))
+            lp_prob_int += pulp.LpAffineExpression(ne) == 0 # we know it's value for sure. (0)
+        
+cont_res = pulp.value(lp_prob_cont.objective)  # TODO : if the algorithm has too many errors add constraints to get more linear result in continous prob.
+if(we_love_avi): print("cont : " + str(pulp.value(lp_prob_cont.objective)))
 
 lp_prob_int.solve()
-
+output='['
 if pulp.LpStatus[lp_prob_int.status] != "Optimal":
     print("error the problem is: " + pulp.LpStatus[lp_prob_int.status])
 else:
     res = lp_prob_int.variables()
-    if(debug_var):
+    if(debug):
         for i in range(len(res)):
             print("{} = {}".format(lp_prob_int.variables()[i].name, lp_prob_int.variables()[i].varValue))
     for v in res:
         if(v.varValue == 0):
             continue
         else:
-            output = "shift " + str(get_shift_id_from_var_name(v.name,number_of_shifts,shifts)) + ": "
-            output += get_name_of_employee_from_var_name(v.name,number_of_shifts)
-            if(debug_var) : output += "\tvar: " + str(v.name) + "-" + str(v.varValue)
-            print(output)
-print("int : " + str(pulp.value(lp_prob_int.objective)))
-
-"""
-if pulp.LpStatus[lp_prob.status] != "Optimal":
-    print("error the problem is: " + pulp.LpStatus[lp_prob.status])
-else:
-    res = lp_prob.variables()
-    if(debug):
-        for i in range(len(res)):
-            print("{} = {}".format(lp_prob.variables()[i].name, lp_prob.variables()[i].varValue))
-    for v in res:
-        if(v.varValue == 0):
-            continue
-        else:
-            output = "shift " + str(get_shift_id_from_var_name(v.name,number_of_shifts,shifts)) + ": "
-            output += get_name_of_employee_from_var_name(v.name,number_of_shifts)
+            output += '{"shiftid":' + str(get_shift_id_from_var_name(v.name,number_of_shifts,shifts)) + ','
+            output += '"employeeid":' + str(get_id_of_employee_from_var_name(v.name,number_of_shifts)) + '},'
             if(debug) : output += "\tvar: " + str(v.name) +"-"+ str(v.varValue)
-            print(output)
-print(pulp.value(lp_prob.objective))"""
+
+output = output[:-1] 
+if output:output+=']'            
+print(output)
 
