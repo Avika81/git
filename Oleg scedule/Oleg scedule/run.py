@@ -87,11 +87,11 @@ class MainHandler(tornado.web.RequestHandler):
         days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
 
         shifts=[];
-        #setup shifts from data
+        # setup shifts from data
         for sh in range(len(data['params']['shifts'])): 
             shifts.append(Shift(data['params']['shifts'][sh]['id'], Time(data['params']['shifts'][sh]['time'][0],data['params']['shifts'][sh]['time'][1],data['params']['shifts'][sh]['time'][2]), data['params']['shifts'][sh]['jobId'], data['params']['shifts'][sh]['availableEmployees']))
 
-        #setup employees from data
+        # setup employees from data
         employees=[]
         for emp in range(len(data['params']['employees'])): 
             tempavailability=[]

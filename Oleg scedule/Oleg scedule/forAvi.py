@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+    #!/usr/bin/env python
 # encoding: utf-8
 
 import tornado.ioloop
@@ -13,10 +13,12 @@ import numpy as np
 import random
 import pulp
 
-we_love_avi = False
+we_love_avi = True
+
 d = False
-d_1 = False
+d_1 = True
 debug = False
+
 debug2 = False
 debug3 = False
 
@@ -91,21 +93,22 @@ class Shift:
 # Employee time in new range format - [25, 30, 1] - monday from 01.00 = 05.00 preferred
 # jobsid in input be like before list -  [1,23,4] but for now i hardcoded in creating employee cycle
 #example = '{"params":{"shifts":[{"id":46124,"time":[166,168],"jobId":4},{"id":46128,"time":[50,53],"jobId":4},{"id":44309,"time":[21.5,24],"jobId":7}],"employees":[{"id":384,"availability":[[0,87,0],[88,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,74,75,77]},{"id":110,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,7,8,9,10,11,12]},{"id":1501,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,8,9,10,11,12,73,74,75]},{"id":70,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,4]},{"id":111,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,74,77]},{"id":89,"availability":[[24,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,4,5,7,8,9,10,11,12,74,75,77]},{"id":1340,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,72,73,77]},{"id":86,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,8,9,10,11,12]},{"id":113,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,8,9,10,11,12,79]},{"id":107,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,8,9,10,11,12,72,73,74,75]},{"id":71,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,72,79]},{"id":371,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,72,79]},{"id":88,"availability":[[0,33,0],[37,57,0],[58.5,81,0],[85,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,7,8,9,10,11,12]},{"id":1677,"availability":[[0,6,0],[6,22.5,1],[22.5,61,0],[61,71,1],[71,129,0],[129,131.5,1],[131.5,133,0],[133,143,1],[143,150,0],[150,167,1],[167,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,9,11,12]},{"id":90,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,73]},{"id":104,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,74,75]},{"id":101,"availability":[[0,12,0],[22.5,34.5,0],[45.5,60,0],[66.5,82,0],[93.5,108,0],[114.5,129,0],[142,153,0],[164.5,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,7,8,9,10,11,12]},{"id":1767,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,4]},{"id":1496,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,7,8,9,10,11,12]},{"id":1562,"availability":[[0,32,0],[32,36,1],[36,56,0],[56,60,1],[60,80,0],[80,84,1],[84,104,0],[104,108,1],[108,128,0],[128,132,1],[132,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,4]},{"id":98,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,7,8,9,10,11,12]},{"id":361,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,72,73,74,75]},{"id":359,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,7,8,9,10,11,12,72,73,74,75,77]},{"id":1513,"availability":[[0,0,1],[24,32,0],[37.25,56,0],[64.5,80,0],[85,89.25,0],[96,104,0],[109,113.25,0],[144,168,1]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12,74]},{"id":1507,"availability":[[0,10,0],[13,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,3,7,8,9,10,11,12]},{"id":347,"availability":[[0,89,0],[93.5,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,7,8,9,10,11,12,74,75]},{"id":102,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,7,8,9,10,11,12,74,75,77]},{"id":366,"availability":[[0,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,3,7,8,9,10,11,12,72,73,74]},{"id":73,"availability":[[0,33,0],[33.92,59,0],[60.5,81,0],[81.92,107,0],[108.5,129,0],[129.92,168,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,2,7,8,9,10,11,12]},{"id":1561,"availability":[[0,0.5,0],[0.5,3.5,1],[10,36,0],[36,41,1],[41,144,0]],"maxDayTime":[12,12,12,12,12,12,12],"maxWeekTime":"30","jobIds":[1,4]}]}}'
-example = '{"params":{"shifts":[{"id":1,"time":[80,84],"jobId":84},{"id":2,"time":[84,88],"jobId":84},{"id":3,"time":[113.5,117.5],"jobId":84},{"id":4,"time":[109.5,113.5],"jobId":84},{"id":5,"time":[62.5,64.5],"jobId":84},{"id":6,"time":[60.5,62.5],"jobId":84},{"id":46281,"time":[64.5,66.5],"jobId":84},{"id":7,"time":[66.5,68.5],"jobId":84},{"id":8,"time":[68.5,70.5],"jobId":84},{"id":9,"time":[70.5,72],"jobId":84}],"employees":[{"id":1,"availability":[[59.5,127.5,0],[131.5,152,0],[162.5,168,0]],"maxDayTime":[4,4,4,4,4,4,4],"maxWeekTime":"20","jobIds":[13,14,15,16,17,64,65,83,84]},{"id":2,"availability":[[0,32,0],[35.5,58,0],[61,80,0],[83.5,106,0],[109,128,0],[131.5,168,0]],"maxDayTime":[4,4,4,4,4,4,4],"maxWeekTime":"20","jobIds":[13,14,15,16,17,64,65,83,84]}]}}'
-data = json.loads(example) 
+# , {"id":4,"time":[109.5,113.5],"jobId":84},{"id":5,"time":[62.5,64.5],"jobId":84},{"id":6,"time":[60.5,62.5],"jobId":84},{"id":46281,"time":[64.5,66.5],"jobId":84},{"id":7,"time":[66.5,68.5],"jobId":84},{"id":8,"time":[68.5,70.5],"jobId":84},{"id":9,"time":[70.5,72],"jobId":84}
+example = '{"params":{"shifts":[{"id":0,"time":[3,6],"jobId":1},{"id":1,"time":[6,9],"jobId":1},{"id":2,"time":[9,12],"jobId":1},{"id":3,"time":[5,8.5],"jobId":2},{"id":4,"time":[8.5,12],"jobId":2}],"employees":[{"id":0,"availability":[[0,1000,0]],"maxDayTime":[4,4,4,4,4,4,4],"maxWeekTime":"20","jobIds":[1,2,3]},{"id":1,"availability":[[0,1000,0]],"maxDayTime":[4,4,4,4,4,4,4],"maxWeekTime":"20","jobIds":[1,2,3]},{"id":2,"availability":[[0,1000,0]],"maxDayTime":[4,4,4,4,4,4,4],"maxWeekTime":"20","jobIds":[1,2,3]},{"id":3,"availability":[[0,1000,0]],"maxDayTime":[4,4,4,4,4,4,4],"maxWeekTime":"20","jobIds":[1,2,3]}]}}'
+data = json.loads(example)
 days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
 #print(data)
 shifts=[];
 #setup shifts from data
-for sh in range(len(data['params']['shifts'])): 
+for sh in range(len(data['params']['shifts'])):
     shifts.append(Shift(data['params']['shifts'][sh]['id'], data['params']['shifts'][sh]['time'], data['params']['shifts'][sh]['jobId']))
 
 #setup employees from data
 employees=[]
-for emp in range(len(data['params']['employees'])): 
+for emp in range(len(data['params']['employees'])):
     #tempavailability=[]
-    
-    #for index in range(len(data['params']['employees'][emp]['availability'])): 
+
+    #for index in range(len(data['params']['employees'][emp]['availability'])):
         #tempavailability.append(Time(data['params']['employees'][emp]['availability'][index][0],data['params']['employees'][emp]['availability'][index][1],data['params']['employees'][emp]['availability'][index][2]))
                      #id,                                              name,          availability,    jobs, max_day,                                        max_week = 20
     employees.append(Employee(data['params']['employees'][emp]['id'], 'EmployeeName', data['params']['employees'][emp]['availability'], data['params']['employees'][emp]['jobIds'], data['params']['employees'][emp]['maxDayTime'], int(data['params']['employees'][emp]['maxWeekTime'])))
@@ -215,18 +218,18 @@ def normalize_pref(employees,shifts):
 normalize_pref(employees,shifts) #change to the format I like :)
 # shifts.sort()
 
-if(d_1): 
+if(d_1):
     for s in range(len(shifts)):
-      print(str(s) + " :  " + str(total_time(shifts[s].time)) + "day :" + str(get_start_day(shifts[s].time)))   
+      print(str(s) + " :  " + str(total_time(shifts[s].time)) + "day :" + str(get_start_day(shifts[s].time)) + "from : " + str(shifts[s].time.start))
 
-if(d_1): 
+if(d_1):
     for s in shifts:
       print(s.time)
 
 number_of_employees = len(employees)
 number_of_shifts = len(shifts)
 
-number_variables = number_of_shifts * number_of_employees 
+number_variables = number_of_shifts * number_of_employees
 
 variables_cont = pulp.LpVariable.dicts("x",range(number_variables),   0, 1,cat="Continuous")
 lp_prob_cont = pulp.LpProblem("schedule", pulp.LpMaximize)
@@ -246,7 +249,7 @@ for s in range(number_of_shifts):
         if(could_do_this_job(shifts[s], employees[e])):  # the employee can do it?
             nc_int.append((variables_int[get_index(e,s,number_of_shifts)],1))
             nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],1))
-    
+            print("e - " + str(employees[e].id) + "can do s - " + str(shifts[s].id))
         else:  # should kill this variable: (so adding the constaint of xij==0
             nl_int = []
             nl_cont = []
@@ -256,7 +259,6 @@ for s in range(number_of_shifts):
             lp_prob_cont += pulp.LpAffineExpression(nl_cont) == 0
     lp_prob_int += pulp.LpAffineExpression(nc_int) <= shifts[s].number_employees_needed
     lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= shifts[s].number_employees_needed
-
 #week constraints:
 for e in range(number_of_employees):
     nc_int = []
@@ -268,45 +270,51 @@ for e in range(number_of_employees):
     lp_prob_int += pulp.LpAffineExpression(nc_int) <= employees[e].max_week
     lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= employees[e].max_week
 
-#day constraints:
+# day constraints:
 for e in range(number_of_employees):
     for d in range(len(days)):
         nc_int = []
         nc_cont = []
 
         for s in range(number_of_shifts):
-            if(get_start_day(shifts[s].time) == day_to_num(days[d])): 
+            if(get_start_day(shifts[s].time) == day_to_num(days[d])):
                 nc_int.append((variables_int[get_index(e,s,number_of_shifts)],time_in_day(shifts[s].time,d)))
-                nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],time_in_day(shifts[s].time,d)))        
+                nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],time_in_day(shifts[s].time,d)))
         if(debug) : print("employee: " + str(employees[e].id) + "nc_int :" + str(pulp.LpAffineExpression(nc_int)))
         lp_prob_int += pulp.LpAffineExpression(nc_int) <= employees[e].max_day[d]
         lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= employees[e].max_day[d]
 
+
 # each man is only in one place .
 for d in days:  # the shifts should be on 5 mins break.
-        for h_12 in range(hours_in_day * 12):
-            t = tTime(d,h_12/12,(h_12 + 1)/12)
-            l = []
-            for s in range(number_of_shifts):
-                if (collision(t,shifts[s].time)):
-                    l.append(s)
+    for h_12 in range(hours_in_day * 12):
+        t = tTime(d,h_12/12,(h_12 + 1)/12)
+        l = []
+        for s in range(number_of_shifts):
+            if (collision(t,shifts[s].time)):
+                l.append(s)
+        # if(len(l)> 1 ) :
+        #     print(l)
+            # continue
+        for e in range(number_of_employees):
             nc_int = []
             nc_cont = []
-            for e in range(number_of_employees):
-                for s in l:
-                    nc_int.append((variables_int[get_index(e,s,number_of_shifts)],1))
-                    nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],1))
-            lp_prob_int += pulp.LpAffineExpression(nc_int) <= 1    
+            for s in l:
+                nc_int.append((variables_int[get_index(e,s,number_of_shifts)],1))
+                nc_cont.append((variables_cont[get_index(e,s,number_of_shifts)],1))
+
+            lp_prob_int += pulp.LpAffineExpression(nc_int) <= 1
             lp_prob_cont += pulp.LpAffineExpression(nc_cont) <= 1
+# print(lp_prob_int)
 
 c_int = []
 c_cont = []
 
 for e in range(number_of_employees):
     for s in range(number_of_shifts):
-        bonus = np.random.uniform(epsilon_1,2*epsilon_1)
-        c_int.append((variables_int[get_index(e,s,number_of_shifts)],shifts[s].priority + bonus))
-        c_cont.append((variables_cont[get_index(e,s,number_of_shifts)],shifts[s].priority + bonus))
+        bonus = np.random.uniform(epsilon_1 * shifts[s].priority ,2 * epsilon_1 * shifts[s].priority)
+        c_int.append((variables_int[get_index(e,s,number_of_shifts)], 1 + bonus))
+        c_cont.append((variables_cont[get_index(e,s,number_of_shifts)],1 + bonus))
 
 lp_prob_int += pulp.LpAffineExpression(c_int) , "total_res_cont"
 lp_prob_cont += pulp.LpAffineExpression(c_cont) , "total_res_int"
@@ -332,7 +340,7 @@ else:
             index = get_variable_index_from_var_name(v.name,number_of_shifts)
             ne.append((variables_int[index],1))
             lp_prob_int += pulp.LpAffineExpression(ne) == 0 # we know it's value for sure. (0)
-        
+
 cont_res = pulp.value(lp_prob_cont.objective)  # TODO : if the algorithm has too many errors add constraints to get more linear result in continous prob.
 if(we_love_avi): print("cont : " + str(pulp.value(lp_prob_cont.objective)))
 
@@ -354,9 +362,9 @@ else:
         else:
             output += '{"shiftid":' + str(get_shift_id_from_var_name(v.name,number_of_shifts,shifts)) + ','
             output += '"employeeid":' + str(get_id_of_employee_from_var_name(v.name,number_of_shifts)) + '},'
-            # if(d) : output += "\n"
-            if(debug) : output += "\tvar: " + str(v.name) +"-"+ str(v.varValue)
+            if(d_1) : output += "\n"
+            # if(debug) : output += "\tvar: " + str(v.name) +"-"+ str(v.varValue)
 
-output = output[:-1] 
-if output:output+=']'            
+output = output[:-1]
+if output:output+=']'
 print(output)
