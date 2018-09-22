@@ -1,7 +1,0 @@
-<phpunit bootstrap="tests.php">
-    <testsuites>
-        <testsuite>
-            <file>DictionaryTest.php</file>
-        </testsuite>
-    </testsuites>
-</phpunit>

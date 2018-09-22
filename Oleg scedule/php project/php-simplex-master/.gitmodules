@@ -1,3 +1,0 @@
-[submodule "vendor/php-matrix-decompositions"]
-	path = vendor/php-matrix-decompositions
-	url = https://github.com/davidstutz/php-matrix-decompositions.git

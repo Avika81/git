@@ -1,2 +1,0 @@
-*SENSE:Maximize
-NAME          MODEL
