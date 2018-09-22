@@ -1,0 +1,51 @@
+time of - create_multislots - 0.0047779083251953125
+time of - start solution - 9.059906005859375e-06
+Generated games: 
+
+[264,266]
+[265,268]
+[266,267]
+{264: [0], 265: [1], 266: [0, 2], 267: [2], 268: [1]}
+time of - get_game - 0.010532617568969727
+num_var: 9, teams: 5, slots 6, games: 3, multi_slots3
+
+time of - created variables - 5.626678466796875e-05
+time of - set_target_function_for_regular_variables - 3.0517578125e-05
+time of - hard_max_games_per_multi_slot - 0.00011706352233886719
+time of - hard_availability_for_teams - 1.4066696166992188e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.00021457672119140625
+time of - hard_no_parallel_coed_no_coed - 0.0001919269561767578
+time of - soft_each_game_happens_once - 8.845329284667969e-05
+time of - soft_a_team_plays_once_a_week - 0.00019049644470214844
+time of - soft_a_team_plays_once_a_day - 7.271766662597656e-05
+time of - setObjective - 1.6927719116210938e-05
+time of - solve - 0.008162498474121094
+coed_0 is 1.0
+coed_1 is 1.0
+coed_2 is 1.0
+sadly, there is - week___t_266,_w_0.0elastic_neg, of - -1.0
+multi_slot_id - 1,slot_id - 4, team - (264, 266)
+multi_slot_id - 2,slot_id - 5, team - (265, 268)
+multi_slot_id - 2,slot_id - 6, team - (266, 267)
+time of - get_output - 0.0003173351287841797
+time of - start solution - 4.124641418457031e-05
+YAY we have scheduled all!
+time of - start solution - 0.005837678909301758
+YAY we have scheduled all!
+time of - start solution - 0.00539708137512207
+YAY we have scheduled all!
+time of - start solution - 0.0054128170013427734
+YAY we have scheduled all!
+time of - start solution - 0.005497932434082031
+YAY we have scheduled all!
+time of - start solution - 0.0054111480712890625
+YAY we have scheduled all!
+time of - start solution - 0.005357503890991211
+YAY we have scheduled all!
+time of - start solution - 0.00546574592590332
+YAY we have scheduled all!
+time of - start solution - 0.00554966926574707
+YAY we have scheduled all!
+time of - start solution - 0.005433082580566406
+YAY we have scheduled all!
+[{'slotId': 4, 'teamsId': (264, 266)}, {'slotId': 5, 'teamsId': (265, 268)}, {'slotId': 6, 'teamsId': (266, 267)}]

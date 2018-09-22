@@ -1,0 +1,76 @@
+time of - create_multislots - 1537589787.0170572
+time of - start solution - 1.4066696166992188e-05
+Generated games: 
+
+[2,3]
+[2,4]
+[2,5]
+[2,6]
+[3,4]
+[3,5]
+[3,6]
+[4,5]
+[4,6]
+[5,6]
+{2: [0, 1, 2, 3], 3: [0, 4, 5, 6], 4: [1, 4, 7, 8], 5: [2, 5, 7, 9], 6: [3, 6, 8, 9]}
+time of - get_game - 0.0051462650299072266
+num_var: 150, teams: 5, slots 15, games: 10, multi_slots15
+
+time of - created variables - 0.0005025863647460938
+time of - set_target_function_for_regular_variables - 0.00014710426330566406
+time of - hard_max_games_per_multi_slot - 0.0005593299865722656
+time of - hard_availability_for_teams - 5.5789947509765625e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.0014011859893798828
+time of - hard_no_parallel_coed_no_coed - 0.001035451889038086
+time of - soft_each_game_happens_once - 0.0004930496215820312
+time of - soft_a_team_plays_once_a_week - 0.0015597343444824219
+time of - soft_a_team_plays_once_a_day - 0.0023140907287597656
+time of - setObjective - 6.699562072753906e-05
+time of - solve - 0.03355145454406738
+coed_0 is 0.0
+coed_1 is 0.0
+coed_10 is 0.0
+coed_11 is 0.0
+coed_12 is 0.0
+coed_13 is 0.0
+coed_14 is 0.0
+coed_2 is 0.0
+coed_3 is 0.0
+coed_4 is 0.0
+coed_5 is 0.0
+coed_6 is 0.0
+coed_7 is 0.0
+coed_8 is 0.0
+coed_9 is 0.0
+multi_slot_id - 4,slot_id - 5, team - (4, 5)
+multi_slot_id - 12,slot_id - 13, team - (2, 3)
+multi_slot_id - 11,slot_id - 12, team - (4, 6)
+multi_slot_id - 14,slot_id - 15, team - (5, 6)
+multi_slot_id - 7,slot_id - 8, team - (2, 4)
+multi_slot_id - 10,slot_id - 11, team - (2, 5)
+multi_slot_id - 1,slot_id - 2, team - (2, 6)
+multi_slot_id - 0,slot_id - 1, team - (3, 4)
+multi_slot_id - 6,slot_id - 7, team - (3, 5)
+multi_slot_id - 3,slot_id - 4, team - (3, 6)
+time of - get_output - 0.0009829998016357422
+time of - start solution - 0.00010991096496582031
+YAY we have scheduled all!
+time of - start solution - 0.005177736282348633
+YAY we have scheduled all!
+time of - start solution - 0.004988431930541992
+YAY we have scheduled all!
+time of - start solution - 0.00497126579284668
+YAY we have scheduled all!
+time of - start solution - 0.0051577091217041016
+YAY we have scheduled all!
+time of - start solution - 0.005026340484619141
+YAY we have scheduled all!
+time of - start solution - 0.0050280094146728516
+YAY we have scheduled all!
+time of - start solution - 0.0049991607666015625
+YAY we have scheduled all!
+time of - start solution - 0.0050580501556396484
+YAY we have scheduled all!
+time of - start solution - 0.0049440860748291016
+YAY we have scheduled all!
+[{'slotId': 5, 'teamsId': (4, 5)}, {'slotId': 13, 'teamsId': (2, 3)}, {'slotId': 12, 'teamsId': (4, 6)}, {'slotId': 15, 'teamsId': (5, 6)}, {'slotId': 8, 'teamsId': (2, 4)}, {'slotId': 11, 'teamsId': (2, 5)}, {'slotId': 2, 'teamsId': (2, 6)}, {'slotId': 1, 'teamsId': (3, 4)}, {'slotId': 7, 'teamsId': (3, 5)}, {'slotId': 4, 'teamsId': (3, 6)}]

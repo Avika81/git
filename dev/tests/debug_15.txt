@@ -1,0 +1,49 @@
+time of - create_multislots - 0.00039267539978027344
+time of - start solution - 7.3909759521484375e-06
+Generated games: 
+
+[304,305]
+{304: [0], 305: [0]}
+time of - get_game - 0.005388736724853516
+num_var: 6, teams: 2, slots 6, games: 1, multi_slots6
+
+time of - created variables - 5.888938903808594e-05
+time of - set_target_function_for_regular_variables - 3.314018249511719e-05
+time of - hard_max_games_per_multi_slot - 0.00019812583923339844
+time of - hard_availability_for_teams - 2.0265579223632812e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.0002071857452392578
+time of - hard_no_parallel_coed_no_coed - 0.00039839744567871094
+time of - soft_each_game_happens_once - 5.91278076171875e-05
+time of - soft_a_team_plays_once_a_week - 0.00013589859008789062
+time of - soft_a_team_plays_once_a_day - 0.00012373924255371094
+time of - setObjective - 2.1219253540039062e-05
+time of - solve - 0.008211135864257812
+coed_0 is 1.0
+coed_1 is 1.0
+coed_2 is 1.0
+coed_3 is 1.0
+coed_4 is 1.0
+coed_5 is 1.0
+multi_slot_id - 5,slot_id - 6, team - (304, 305)
+time of - get_output - 0.0001819133758544922
+time of - start solution - 5.269050598144531e-05
+YAY we have scheduled all!
+time of - start solution - 0.005186319351196289
+YAY we have scheduled all!
+time of - start solution - 0.0050945281982421875
+YAY we have scheduled all!
+time of - start solution - 0.004830837249755859
+YAY we have scheduled all!
+time of - start solution - 0.004465341567993164
+YAY we have scheduled all!
+time of - start solution - 0.00439906120300293
+YAY we have scheduled all!
+time of - start solution - 0.00453948974609375
+YAY we have scheduled all!
+time of - start solution - 0.004498958587646484
+YAY we have scheduled all!
+time of - start solution - 0.004487752914428711
+YAY we have scheduled all!
+time of - start solution - 0.0044422149658203125
+YAY we have scheduled all!
+[{'slotId': 6, 'teamsId': (304, 305)}]

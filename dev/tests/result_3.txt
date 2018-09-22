@@ -1,0 +1,1 @@
+[{'slotId': 5, 'teamsId': (62, 66)}, {'slotId': 4, 'teamsId': (62, 66)}]

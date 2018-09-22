@@ -1,0 +1,249 @@
+time of - create_multislots - 0.005666017532348633
+time of - start solution - 8.58306884765625e-06
+Generated games: 
+
+[240,241]
+[240,242]
+{240: [0, 1], 241: [0], 242: [1]}
+time of - get_game - 0.008669853210449219
+num_var: 4, teams: 3, slots 2, games: 2, multi_slots2
+
+time of - created variables - 4.315376281738281e-05
+time of - set_target_function_for_regular_variables - 2.384185791015625e-05
+time of - hard_max_games_per_multi_slot - 9.012222290039062e-05
+time of - hard_availability_for_teams - 6.532669067382812e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.00011610984802246094
+time of - hard_no_parallel_coed_no_coed - 0.0001506805419921875
+time of - soft_each_game_happens_once - 7.43865966796875e-05
+time of - soft_a_team_plays_once_a_week - 0.00011301040649414062
+time of - soft_a_team_plays_once_a_day - 0.00010633468627929688
+time of - setObjective - 1.3828277587890625e-05
+time of - solve - 0.0062558650970458984
+coed_0 is 0.0
+coed_1 is 0.0
+time of - get_output - 7.176399230957031e-05
+time of - start solution - 3.910064697265625e-05
+Generated games: 
+
+[240,241]
+[240,242]
+{240: [0, 1], 241: [0], 242: [1]}
+time of - get_game - 0.008170127868652344
+num_var: 4, teams: 3, slots 2, games: 2, multi_slots2
+
+time of - created variables - 4.220008850097656e-05
+time of - set_target_function_for_regular_variables - 2.4080276489257812e-05
+time of - hard_max_games_per_multi_slot - 8.821487426757812e-05
+time of - hard_availability_for_teams - 6.67572021484375e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 9.34600830078125e-05
+time of - hard_no_parallel_coed_no_coed - 0.00013375282287597656
+time of - soft_each_game_happens_once - 5.936622619628906e-05
+time of - soft_a_team_plays_once_a_week - 0.00011110305786132812
+time of - soft_a_team_plays_once_a_day - 0.00010347366333007812
+time of - setObjective - 1.8358230590820312e-05
+time of - solve - 0.00606989860534668
+coed_0 is 0.0
+coed_1 is 0.0
+time of - get_output - 7.128715515136719e-05
+time of - start solution - 3.981590270996094e-05
+Generated games: 
+
+[240,241]
+[240,242]
+{240: [0, 1], 241: [0], 242: [1]}
+time of - get_game - 0.008485078811645508
+num_var: 4, teams: 3, slots 2, games: 2, multi_slots2
+
+time of - created variables - 4.220008850097656e-05
+time of - set_target_function_for_regular_variables - 2.9087066650390625e-05
+time of - hard_max_games_per_multi_slot - 8.988380432128906e-05
+time of - hard_availability_for_teams - 6.67572021484375e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 9.846687316894531e-05
+time of - hard_no_parallel_coed_no_coed - 0.00012874603271484375
+time of - soft_each_game_happens_once - 5.888938903808594e-05
+time of - soft_a_team_plays_once_a_week - 0.00010991096496582031
+time of - soft_a_team_plays_once_a_day - 0.00010085105895996094
+time of - setObjective - 1.621246337890625e-05
+time of - solve - 0.0061147212982177734
+coed_0 is 0.0
+coed_1 is 0.0
+time of - get_output - 7.486343383789062e-05
+time of - start solution - 4.7206878662109375e-05
+Generated games: 
+
+[240,242]
+[241,242]
+{240: [0], 241: [1], 242: [0, 1]}
+time of - get_game - 0.008157730102539062
+num_var: 4, teams: 3, slots 2, games: 2, multi_slots2
+
+time of - created variables - 4.363059997558594e-05
+time of - set_target_function_for_regular_variables - 2.47955322265625e-05
+time of - hard_max_games_per_multi_slot - 9.226799011230469e-05
+time of - hard_availability_for_teams - 4.3392181396484375e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.00010347366333007812
+time of - hard_no_parallel_coed_no_coed - 0.0001380443572998047
+time of - soft_each_game_happens_once - 6.222724914550781e-05
+time of - soft_a_team_plays_once_a_week - 0.00011801719665527344
+time of - soft_a_team_plays_once_a_day - 0.0001087188720703125
+time of - setObjective - 1.4781951904296875e-05
+time of - solve - 0.006663322448730469
+coed_0 is 0.0
+coed_1 is 0.0
+multi_slot_id - 0,slot_id - 1, team - (241, 242)
+time of - get_output - 0.00012183189392089844
+time of - start solution - 9.083747863769531e-05
+Generated games: 
+
+[240,241]
+{240: [0], 241: [0], 242: []}
+time of - get_game - 0.0052356719970703125
+num_var: 2, teams: 3, slots 2, games: 1, multi_slots2
+
+time of - created variables - 4.267692565917969e-05
+time of - set_target_function_for_regular_variables - 2.3126602172851562e-05
+time of - hard_max_games_per_multi_slot - 9.369850158691406e-05
+time of - hard_availability_for_teams - 4.696846008300781e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 9.822845458984375e-05
+time of - hard_no_parallel_coed_no_coed - 0.00014662742614746094
+time of - soft_each_game_happens_once - 4.267692565917969e-05
+time of - soft_a_team_plays_once_a_week - 0.00011897087097167969
+time of - soft_a_team_plays_once_a_day - 0.00010561943054199219
+time of - setObjective - 2.0503997802734375e-05
+time of - solve - 0.006676197052001953
+coed_0 is 0.0
+coed_1 is 0.0
+time of - get_output - 7.796287536621094e-05
+time of - start solution - 4.315376281738281e-05
+Generated games: 
+
+[240,242]
+{240: [0], 241: [], 242: [0]}
+time of - get_game - 0.0058400630950927734
+num_var: 2, teams: 3, slots 2, games: 1, multi_slots2
+
+time of - created variables - 4.649162292480469e-05
+time of - set_target_function_for_regular_variables - 2.574920654296875e-05
+time of - hard_max_games_per_multi_slot - 0.00010180473327636719
+time of - hard_availability_for_teams - 5.125999450683594e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.00010728836059570312
+time of - hard_no_parallel_coed_no_coed - 0.00016880035400390625
+time of - soft_each_game_happens_once - 4.57763671875e-05
+time of - soft_a_team_plays_once_a_week - 0.00013208389282226562
+time of - soft_a_team_plays_once_a_day - 0.00011706352233886719
+time of - setObjective - 1.71661376953125e-05
+time of - solve - 0.0069675445556640625
+coed_0 is 0.0
+coed_1 is 0.0
+time of - get_output - 8.0108642578125e-05
+time of - start solution - 4.7206878662109375e-05
+Generated games: 
+
+[240,242]
+{240: [0], 241: [], 242: [0]}
+time of - get_game - 0.005803585052490234
+num_var: 2, teams: 3, slots 2, games: 1, multi_slots2
+
+time of - created variables - 4.696846008300781e-05
+time of - set_target_function_for_regular_variables - 2.574920654296875e-05
+time of - hard_max_games_per_multi_slot - 0.00010275840759277344
+time of - hard_availability_for_teams - 5.936622619628906e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.00011157989501953125
+time of - hard_no_parallel_coed_no_coed - 0.00016307830810546875
+time of - soft_each_game_happens_once - 4.649162292480469e-05
+time of - soft_a_team_plays_once_a_week - 0.0001327991485595703
+time of - soft_a_team_plays_once_a_day - 0.00011754035949707031
+time of - setObjective - 1.6450881958007812e-05
+time of - solve - 0.00691986083984375
+coed_0 is 0.0
+coed_1 is 0.0
+time of - get_output - 7.867813110351562e-05
+time of - start solution - 4.7206878662109375e-05
+Generated games: 
+
+[240,242]
+{240: [0], 241: [], 242: [0]}
+time of - get_game - 0.005836963653564453
+num_var: 2, teams: 3, slots 2, games: 1, multi_slots2
+
+time of - created variables - 4.649162292480469e-05
+time of - set_target_function_for_regular_variables - 2.574920654296875e-05
+time of - hard_max_games_per_multi_slot - 0.00010156631469726562
+time of - hard_availability_for_teams - 5.841255187988281e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.000110626220703125
+time of - hard_no_parallel_coed_no_coed - 0.000164031982421875
+time of - soft_each_game_happens_once - 4.57763671875e-05
+time of - soft_a_team_plays_once_a_week - 0.000133514404296875
+time of - soft_a_team_plays_once_a_day - 0.00011992454528808594
+time of - setObjective - 1.71661376953125e-05
+time of - solve - 0.006850242614746094
+coed_0 is 0.0
+coed_1 is 0.0
+time of - get_output - 8.249282836914062e-05
+time of - start solution - 4.839897155761719e-05
+Generated games: 
+
+[240,241]
+{240: [0], 241: [0], 242: []}
+time of - get_game - 0.005860328674316406
+num_var: 2, teams: 3, slots 2, games: 1, multi_slots2
+
+time of - created variables - 4.553794860839844e-05
+time of - set_target_function_for_regular_variables - 2.6464462280273438e-05
+time of - hard_max_games_per_multi_slot - 0.00010132789611816406
+time of - hard_availability_for_teams - 5.054473876953125e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.00020551681518554688
+time of - hard_no_parallel_coed_no_coed - 0.00016832351684570312
+time of - soft_each_game_happens_once - 4.935264587402344e-05
+time of - soft_a_team_plays_once_a_week - 0.00013566017150878906
+time of - soft_a_team_plays_once_a_day - 0.00011968612670898438
+time of - setObjective - 1.7404556274414062e-05
+time of - solve - 0.006977081298828125
+coed_0 is 0.0
+coed_1 is 0.0
+time of - get_output - 8.130073547363281e-05
+time of - start solution - 4.482269287109375e-05
+Generated games: 
+
+[240,242]
+{240: [0], 241: [], 242: [0]}
+time of - get_game - 0.005943775177001953
+num_var: 2, teams: 3, slots 2, games: 1, multi_slots2
+
+time of - created variables - 4.887580871582031e-05
+time of - set_target_function_for_regular_variables - 2.574920654296875e-05
+time of - hard_max_games_per_multi_slot - 0.00011157989501953125
+time of - hard_availability_for_teams - 5.173683166503906e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.00010895729064941406
+time of - hard_no_parallel_coed_no_coed - 0.0001614093780517578
+time of - soft_each_game_happens_once - 4.744529724121094e-05
+time of - soft_a_team_plays_once_a_week - 0.00013446807861328125
+time of - soft_a_team_plays_once_a_day - 0.00011730194091796875
+time of - setObjective - 1.7404556274414062e-05
+time of - solve - 0.0069844722747802734
+coed_0 is 0.0
+coed_1 is 0.0
+time of - get_output - 8.130073547363281e-05
+time of - start solution - 4.553794860839844e-05
+Generated games: 
+
+[240,242]
+{240: [0], 241: [], 242: [0]}
+time of - get_game - 0.0059316158294677734
+num_var: 2, teams: 3, slots 2, games: 1, multi_slots2
+
+time of - created variables - 4.982948303222656e-05
+time of - set_target_function_for_regular_variables - 2.4318695068359375e-05
+time of - hard_max_games_per_multi_slot - 0.00010466575622558594
+time of - hard_availability_for_teams - 5.245208740234375e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.00010848045349121094
+time of - hard_no_parallel_coed_no_coed - 0.00017404556274414062
+time of - soft_each_game_happens_once - 4.649162292480469e-05
+time of - soft_a_team_plays_once_a_week - 0.00013256072998046875
+time of - soft_a_team_plays_once_a_day - 0.00011682510375976562
+time of - setObjective - 1.6927719116210938e-05
+time of - solve - 0.006926298141479492
+coed_0 is 0.0
+coed_1 is 0.0
+time of - get_output - 7.796287536621094e-05
+[{'slotId': 1, 'teamsId': (241, 242)}]

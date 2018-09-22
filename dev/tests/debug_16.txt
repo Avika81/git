@@ -1,0 +1,78 @@
+time of - create_multislots - 0.0048139095306396484
+time of - start solution - 8.106231689453125e-06
+Generated games: 
+
+[304,305]
+{304: [0], 305: [0]}
+time of - get_game - 0.004805088043212891
+num_var: 8, teams: 2, slots 8, games: 1, multi_slots8
+
+time of - created variables - 5.507469177246094e-05
+time of - set_target_function_for_regular_variables - 3.170967102050781e-05
+time of - hard_max_games_per_multi_slot - 0.00020360946655273438
+time of - hard_availability_for_teams - 2.002716064453125e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.00023651123046875
+time of - hard_no_parallel_coed_no_coed - 0.00041103363037109375
+time of - soft_each_game_happens_once - 5.602836608886719e-05
+time of - soft_a_team_plays_once_a_week - 0.0001327991485595703
+time of - soft_a_team_plays_once_a_day - 0.00013184547424316406
+time of - setObjective - 1.8596649169921875e-05
+time of - solve - 0.00732111930847168
+coed_0 is 1.0
+coed_1 is 1.0
+coed_2 is 1.0
+coed_3 is 1.0
+coed_4 is 1.0
+coed_5 is 1.0
+coed_6 is 1.0
+coed_7 is 1.0
+multi_slot_id - 7,slot_id - 8, team - (304, 305)
+time of - get_output - 0.00017309188842773438
+time of - start solution - 4.744529724121094e-05
+Generated games: 
+
+[304,305]
+{304: [0], 305: [0]}
+time of - get_game - 0.00454258918762207
+num_var: 8, teams: 2, slots 8, games: 1, multi_slots8
+
+time of - created variables - 5.507469177246094e-05
+time of - set_target_function_for_regular_variables - 3.266334533691406e-05
+time of - hard_max_games_per_multi_slot - 0.0003123283386230469
+time of - hard_availability_for_teams - 4.2438507080078125e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.0002415180206298828
+time of - hard_no_parallel_coed_no_coed - 0.00042057037353515625
+time of - soft_each_game_happens_once - 5.698204040527344e-05
+time of - soft_a_team_plays_once_a_week - 0.00016117095947265625
+time of - soft_a_team_plays_once_a_day - 0.00015091896057128906
+time of - setObjective - 1.8358230590820312e-05
+time of - solve - 0.007370948791503906
+coed_0 is 1.0
+coed_1 is 1.0
+coed_2 is 1.0
+coed_3 is 1.0
+coed_4 is 1.0
+coed_5 is 1.0
+coed_6 is 1.0
+coed_7 is 1.0
+multi_slot_id - 6,slot_id - 7, team - (304, 305)
+time of - get_output - 0.00018835067749023438
+time of - start solution - 3.886222839355469e-05
+YAY we have scheduled all!
+time of - start solution - 0.0045163631439208984
+YAY we have scheduled all!
+time of - start solution - 0.004712820053100586
+YAY we have scheduled all!
+time of - start solution - 0.005030393600463867
+YAY we have scheduled all!
+time of - start solution - 0.004616260528564453
+YAY we have scheduled all!
+time of - start solution - 0.004593849182128906
+YAY we have scheduled all!
+time of - start solution - 0.004395008087158203
+YAY we have scheduled all!
+time of - start solution - 0.004405021667480469
+YAY we have scheduled all!
+time of - start solution - 0.0044574737548828125
+YAY we have scheduled all!
+[{'slotId': 8, 'teamsId': (304, 305)}, {'slotId': 7, 'teamsId': (304, 305)}]

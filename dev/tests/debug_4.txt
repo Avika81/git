@@ -1,0 +1,87 @@
+time of - create_multislots - 0.000804901123046875
+time of - start solution - 6.4373016357421875e-06
+Generated games: 
+
+[119,120]
+[119,121]
+[120,122]
+[121,122]
+{119: [0, 1], 120: [0, 2], 121: [1, 3], 122: [2, 3]}
+time of - get_game - 0.005238771438598633
+num_var: 120, teams: 4, slots 30, games: 4, multi_slots30
+
+time of - created variables - 0.00025582313537597656
+time of - set_target_function_for_regular_variables - 0.0001366138458251953
+time of - hard_max_games_per_multi_slot - 0.0007483959197998047
+time of - hard_availability_for_teams - 7.200241088867188e-05
+time of - hard_each_team_is_is_one_place_at_a_time - 0.0018453598022460938
+time of - hard_no_parallel_coed_no_coed - 0.0018296241760253906
+time of - soft_each_game_happens_once - 0.0003478527069091797
+time of - soft_a_team_plays_once_a_week - 0.0007874965667724609
+time of - soft_a_team_plays_once_a_day - 0.0008215904235839844
+time of - setObjective - 5.221366882324219e-05
+time of - solve - 0.01884007453918457
+sadly, there is - 1day___t__119,_d__0.0elastic_neg, of - -1.0
+sadly, there is - 1day___t__120,_d__0.0elastic_neg, of - -1.0
+sadly, there is - 1day___t__121,_d__0.0elastic_neg, of - -1.0
+sadly, there is - 1day___t__122,_d__0.0elastic_neg, of - -1.0
+coed_0 is 0.0
+coed_1 is 0.0
+coed_10 is 0.0
+coed_11 is 0.0
+coed_12 is 0.0
+coed_13 is 0.0
+coed_14 is 0.0
+coed_15 is 0.0
+coed_16 is 0.0
+coed_17 is 0.0
+coed_18 is 0.0
+coed_19 is 0.0
+coed_2 is 0.0
+coed_20 is 0.0
+coed_21 is 0.0
+coed_22 is 0.0
+coed_23 is 0.0
+coed_24 is 0.0
+coed_25 is 0.0
+coed_26 is 0.0
+coed_27 is 0.0
+coed_28 is 0.0
+coed_29 is 0.0
+coed_3 is 0.0
+coed_4 is 0.0
+coed_5 is 0.0
+coed_6 is 0.0
+coed_7 is 0.0
+coed_8 is 0.0
+coed_9 is 0.0
+sadly, there is - week___t_119,_w_0.0elastic_neg, of - -1.0
+sadly, there is - week___t_120,_w_0.0elastic_neg, of - -1.0
+sadly, there is - week___t_121,_w_0.0elastic_neg, of - -1.0
+sadly, there is - week___t_122,_w_0.0elastic_neg, of - -1.0
+multi_slot_id - 18,slot_id - 13, team - (121, 122)
+multi_slot_id - 29,slot_id - 30, team - (119, 120)
+multi_slot_id - 26,slot_id - 5, team - (119, 121)
+multi_slot_id - 8,slot_id - 23, team - (120, 122)
+time of - get_output - 0.0007915496826171875
+time of - start solution - 0.00010561943054199219
+YAY we have scheduled all!
+time of - start solution - 0.0050506591796875
+YAY we have scheduled all!
+time of - start solution - 0.0049250125885009766
+YAY we have scheduled all!
+time of - start solution - 0.004884958267211914
+YAY we have scheduled all!
+time of - start solution - 0.004895925521850586
+YAY we have scheduled all!
+time of - start solution - 0.005042552947998047
+YAY we have scheduled all!
+time of - start solution - 0.004849910736083984
+YAY we have scheduled all!
+time of - start solution - 0.0048370361328125
+YAY we have scheduled all!
+time of - start solution - 0.004820346832275391
+YAY we have scheduled all!
+time of - start solution - 0.0048525333404541016
+YAY we have scheduled all!
+[{'slotId': 13, 'teamsId': (121, 122)}, {'slotId': 30, 'teamsId': (119, 120)}, {'slotId': 5, 'teamsId': (119, 121)}, {'slotId': 23, 'teamsId': (120, 122)}]

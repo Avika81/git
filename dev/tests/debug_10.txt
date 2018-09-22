@@ -1,0 +1,341 @@
+time of - create_multislots - 0.013295888900756836
+time of - start solution - 2.5033950805664062e-05
+Generated games: 
+
+[27,28]
+[27,29]
+[28,33]
+[29,30]
+[29,31]
+[29,32]
+[29,33]
+[30,31]
+[30,32]
+[30,33]
+[31,32]
+[31,33]
+[27,30]
+[32,33]
+[27,31]
+[27,32]
+[27,33]
+[28,29]
+[28,30]
+[28,31]
+[28,32]
+{27: [0, 1, 12, 14, 15, 16], 28: [0, 2, 17, 18, 19, 20], 29: [1, 3, 4, 5, 6, 17], 30: [3, 7, 8, 9, 12, 18], 31: [4, 7, 10, 11, 14, 19], 32: [5, 8, 10, 13, 15, 20], 33: [2, 6, 9, 11, 13, 16]}
+time of - get_game - 0.007035255432128906
+num_var: 2226, teams: 7, slots 141, games: 21, multi_slots106
+
+time of - created variables - 0.005171060562133789
+time of - set_target_function_for_regular_variables - 0.0028412342071533203
+time of - hard_max_games_per_multi_slot - 0.008405447006225586
+time of - hard_availability_for_teams - 0.0007381439208984375
+time of - hard_each_team_is_is_one_place_at_a_time - 0.02056431770324707
+time of - hard_no_parallel_coed_no_coed - 0.016277313232421875
+time of - soft_each_game_happens_once - 0.007075309753417969
+time of - soft_a_team_plays_once_a_week - 0.013447046279907227
+time of - soft_a_team_plays_once_a_day - 0.024236679077148438
+time of - setObjective - 0.0006213188171386719
+time of - solve - 0.3138594627380371
+coed_0 is 1.0
+coed_1 is 1.0
+coed_10 is 1.0
+coed_100 is 1.0
+coed_101 is 1.0
+coed_102 is 1.0
+coed_103 is 1.0
+coed_104 is 1.0
+coed_105 is 1.0
+coed_11 is 1.0
+coed_12 is 1.0
+coed_13 is 1.0
+coed_14 is 1.0
+coed_15 is 1.0
+coed_16 is 1.0
+coed_17 is 1.0
+coed_18 is 1.0
+coed_19 is 1.0
+coed_2 is 1.0
+coed_20 is 1.0
+coed_21 is 1.0
+coed_22 is 1.0
+coed_23 is 1.0
+coed_24 is 1.0
+coed_25 is 1.0
+coed_26 is 1.0
+coed_27 is 1.0
+coed_28 is 1.0
+coed_29 is 1.0
+coed_3 is 1.0
+coed_30 is 1.0
+coed_31 is 1.0
+coed_32 is 1.0
+coed_33 is 1.0
+coed_34 is 1.0
+coed_35 is 1.0
+coed_36 is 1.0
+coed_37 is 1.0
+coed_38 is 1.0
+coed_39 is 1.0
+coed_4 is 1.0
+coed_40 is 1.0
+coed_41 is 1.0
+coed_42 is 1.0
+coed_43 is 1.0
+coed_44 is 1.0
+coed_45 is 1.0
+coed_46 is 1.0
+coed_47 is 1.0
+coed_48 is 1.0
+coed_49 is 1.0
+coed_5 is 1.0
+coed_50 is 1.0
+coed_51 is 1.0
+coed_52 is 1.0
+coed_53 is 1.0
+coed_54 is 1.0
+coed_55 is 1.0
+coed_56 is 1.0
+coed_57 is 1.0
+coed_58 is 1.0
+coed_59 is 1.0
+coed_6 is 1.0
+coed_60 is 1.0
+coed_61 is 1.0
+coed_62 is 1.0
+coed_63 is 1.0
+coed_64 is 1.0
+coed_65 is 1.0
+coed_66 is 1.0
+coed_67 is 1.0
+coed_68 is 1.0
+coed_69 is 1.0
+coed_7 is 1.0
+coed_70 is 1.0
+coed_71 is 1.0
+coed_72 is 1.0
+coed_73 is 1.0
+coed_74 is 1.0
+coed_75 is 1.0
+coed_76 is 1.0
+coed_77 is 1.0
+coed_78 is 1.0
+coed_79 is 1.0
+coed_8 is 1.0
+coed_80 is 1.0
+coed_81 is 1.0
+coed_82 is 1.0
+coed_83 is 1.0
+coed_84 is 1.0
+coed_85 is 1.0
+coed_86 is 1.0
+coed_87 is 1.0
+coed_88 is 1.0
+coed_89 is 1.0
+coed_9 is 1.0
+coed_90 is 1.0
+coed_91 is 1.0
+coed_92 is 1.0
+coed_93 is 1.0
+coed_94 is 1.0
+coed_95 is 1.0
+coed_96 is 1.0
+coed_97 is 1.0
+coed_98 is 1.0
+coed_99 is 1.0
+sadly, there is - week___t_27,_w_0.0elastic_neg, of - -2.0
+sadly, there is - week___t_27,_w_2.0elastic_neg, of - -1.0
+sadly, there is - week___t_28,_w_0.0elastic_neg, of - -2.0
+sadly, there is - week___t_28,_w_2.0elastic_neg, of - -1.0
+sadly, there is - week___t_29,_w_0.0elastic_neg, of - -2.0
+sadly, there is - week___t_29,_w_1.0elastic_neg, of - -1.0
+sadly, there is - week___t_30,_w_0.0elastic_neg, of - -1.0
+sadly, there is - week___t_30,_w_1.0elastic_neg, of - -1.0
+sadly, there is - week___t_30,_w_2.0elastic_neg, of - -1.0
+sadly, there is - week___t_31,_w_1.0elastic_neg, of - -1.0
+sadly, there is - week___t_31,_w_2.0elastic_neg, of - -2.0
+sadly, there is - week___t_32,_w_1.0elastic_neg, of - -2.0
+sadly, there is - week___t_32,_w_2.0elastic_neg, of - -1.0
+sadly, there is - week___t_33,_w_0.0elastic_neg, of - -2.0
+sadly, there is - week___t_33,_w_2.0elastic_neg, of - -1.0
+multi_slot_id - 76,slot_id - 110, team - (31, 32)
+multi_slot_id - 46,slot_id - 78, team - (31, 33)
+multi_slot_id - 33,slot_id - 28, team - (27, 30)
+multi_slot_id - 25,slot_id - 19, team - (27, 29)
+multi_slot_id - 104,slot_id - 131, team - (32, 33)
+multi_slot_id - 81,slot_id - 113, team - (27, 31)
+multi_slot_id - 66,slot_id - 100, team - (27, 32)
+multi_slot_id - 17,slot_id - 50, team - (27, 33)
+multi_slot_id - 26,slot_id - 56, team - (28, 29)
+multi_slot_id - 82,slot_id - 114, team - (28, 30)
+multi_slot_id - 2,slot_id - 38, team - (28, 31)
+multi_slot_id - 60,slot_id - 86, team - (28, 32)
+multi_slot_id - 21,slot_id - 55, team - (28, 33)
+multi_slot_id - 50,slot_id - 76, team - (29, 30)
+multi_slot_id - 51,slot_id - 81, team - (29, 31)
+multi_slot_id - 10,slot_id - 43, team - (29, 32)
+multi_slot_id - 79,slot_id - 108, team - (29, 33)
+multi_slot_id - 96,slot_id - 127, team - (30, 31)
+multi_slot_id - 90,slot_id - 120, team - (27, 28)
+multi_slot_id - 64,slot_id - 91, team - (30, 32)
+multi_slot_id - 9,slot_id - 42, team - (30, 33)
+time of - get_output - 0.010152101516723633
+time of - start solution - 0.00101470947265625
+Generated games: 
+
+[27,29]
+[28,33]
+[29,31]
+[30,32]
+[31,33]
+[27,32]
+[28,30]
+{27: [0, 5], 28: [1, 6], 29: [0, 2], 30: [3, 6], 31: [2, 4], 32: [3, 5], 33: [1, 4]}
+time of - get_game - 0.006198883056640625
+num_var: 742, teams: 7, slots 141, games: 7, multi_slots106
+
+time of - created variables - 0.0012891292572021484
+time of - set_target_function_for_regular_variables - 0.0006134510040283203
+time of - hard_max_games_per_multi_slot - 0.003000974655151367
+time of - hard_availability_for_teams - 0.0011823177337646484
+time of - hard_each_team_is_is_one_place_at_a_time - 0.010286808013916016
+time of - hard_no_parallel_coed_no_coed - 0.008637189865112305
+time of - soft_each_game_happens_once - 0.0014986991882324219
+time of - soft_a_team_plays_once_a_week - 0.004625797271728516
+time of - soft_a_team_plays_once_a_day - 0.013257026672363281
+time of - setObjective - 0.0002384185791015625
+time of - solve - 0.10338068008422852
+coed_0 is 1.0
+coed_1 is 1.0
+coed_10 is 1.0
+coed_100 is 1.0
+coed_101 is 1.0
+coed_102 is 1.0
+coed_103 is 1.0
+coed_104 is 1.0
+coed_105 is 1.0
+coed_11 is 1.0
+coed_12 is 1.0
+coed_13 is 1.0
+coed_14 is 1.0
+coed_15 is 1.0
+coed_16 is 1.0
+coed_17 is 1.0
+coed_18 is 1.0
+coed_19 is 1.0
+coed_2 is 1.0
+coed_20 is 1.0
+coed_21 is 1.0
+coed_22 is 1.0
+coed_23 is 1.0
+coed_24 is 1.0
+coed_25 is 1.0
+coed_26 is 1.0
+coed_27 is 1.0
+coed_28 is 1.0
+coed_29 is 1.0
+coed_3 is 1.0
+coed_30 is 1.0
+coed_31 is 1.0
+coed_32 is 1.0
+coed_33 is 1.0
+coed_34 is 1.0
+coed_35 is 1.0
+coed_36 is 1.0
+coed_37 is 1.0
+coed_38 is 1.0
+coed_39 is 1.0
+coed_4 is 1.0
+coed_40 is 1.0
+coed_41 is 1.0
+coed_42 is 1.0
+coed_43 is 1.0
+coed_44 is 1.0
+coed_45 is 1.0
+coed_46 is 1.0
+coed_47 is 1.0
+coed_48 is 1.0
+coed_49 is 1.0
+coed_5 is 1.0
+coed_50 is 1.0
+coed_51 is 1.0
+coed_52 is 1.0
+coed_53 is 1.0
+coed_54 is 1.0
+coed_55 is 1.0
+coed_56 is 1.0
+coed_57 is 1.0
+coed_58 is 1.0
+coed_59 is 1.0
+coed_6 is 1.0
+coed_60 is 1.0
+coed_61 is 1.0
+coed_62 is 1.0
+coed_63 is 1.0
+coed_64 is 1.0
+coed_65 is 1.0
+coed_66 is 1.0
+coed_67 is 1.0
+coed_68 is 1.0
+coed_69 is 1.0
+coed_7 is 1.0
+coed_70 is 1.0
+coed_71 is 1.0
+coed_72 is 1.0
+coed_73 is 1.0
+coed_74 is 1.0
+coed_75 is 1.0
+coed_76 is 1.0
+coed_77 is 1.0
+coed_78 is 1.0
+coed_79 is 1.0
+coed_8 is 1.0
+coed_80 is 1.0
+coed_81 is 1.0
+coed_82 is 1.0
+coed_83 is 1.0
+coed_84 is 1.0
+coed_85 is 1.0
+coed_86 is 1.0
+coed_87 is 1.0
+coed_88 is 1.0
+coed_89 is 1.0
+coed_9 is 1.0
+coed_90 is 1.0
+coed_91 is 1.0
+coed_92 is 1.0
+coed_93 is 1.0
+coed_94 is 1.0
+coed_95 is 1.0
+coed_96 is 1.0
+coed_97 is 1.0
+coed_98 is 1.0
+coed_99 is 1.0
+multi_slot_id - 75,slot_id - 102, team - (28, 33)
+multi_slot_id - 2,slot_id - 3, team - (27, 29)
+multi_slot_id - 74,slot_id - 105, team - (29, 31)
+multi_slot_id - 17,slot_id - 15, team - (30, 32)
+multi_slot_id - 26,slot_id - 21, team - (31, 33)
+multi_slot_id - 105,slot_id - 132, team - (27, 32)
+multi_slot_id - 84,slot_id - 112, team - (28, 30)
+time of - get_output - 0.004048824310302734
+time of - start solution - 0.0004420280456542969
+YAY we have scheduled all!
+time of - start solution - 0.0060749053955078125
+YAY we have scheduled all!
+time of - start solution - 0.005979061126708984
+YAY we have scheduled all!
+time of - start solution - 0.005738735198974609
+YAY we have scheduled all!
+time of - start solution - 0.005741596221923828
+YAY we have scheduled all!
+time of - start solution - 0.005856990814208984
+YAY we have scheduled all!
+time of - start solution - 0.005906581878662109
+YAY we have scheduled all!
+time of - start solution - 0.006166219711303711
+YAY we have scheduled all!
+time of - start solution - 0.0057430267333984375
+YAY we have scheduled all!
+[{'slotId': 110, 'teamsId': (31, 32)}, {'slotId': 78, 'teamsId': (31, 33)}, {'slotId': 28, 'teamsId': (27, 30)}, {'slotId': 19, 'teamsId': (27, 29)}, {'slotId': 131, 'teamsId': (32, 33)}, {'slotId': 113, 'teamsId': (27, 31)}, {'slotId': 100, 'teamsId': (27, 32)}, {'slotId': 50, 'teamsId': (27, 33)}, {'slotId': 56, 'teamsId': (28, 29)}, {'slotId': 114, 'teamsId': (28, 30)}, {'slotId': 38, 'teamsId': (28, 31)}, {'slotId': 86, 'teamsId': (28, 32)}, {'slotId': 55, 'teamsId': (28, 33)}, {'slotId': 76, 'teamsId': (29, 30)}, {'slotId': 81, 'teamsId': (29, 31)}, {'slotId': 43, 'teamsId': (29, 32)}, {'slotId': 108, 'teamsId': (29, 33)}, {'slotId': 127, 'teamsId': (30, 31)}, {'slotId': 120, 'teamsId': (27, 28)}, {'slotId': 91, 'teamsId': (30, 32)}, {'slotId': 42, 'teamsId': (30, 33)}, {'slotId': 102, 'teamsId': (28, 33)}, {'slotId': 3, 'teamsId': (27, 29)}, {'slotId': 105, 'teamsId': (29, 31)}, {'slotId': 15, 'teamsId': (30, 32)}, {'slotId': 21, 'teamsId': (31, 33)}, {'slotId': 132, 'teamsId': (27, 32)}, {'slotId': 112, 'teamsId': (28, 30)}]
